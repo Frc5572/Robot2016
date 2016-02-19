@@ -44,7 +44,9 @@ public class Snoopr {
 	public static boolean[] getDio() {
 		return new boolean[] { cockDio.get(), !lockDio.get(), grabberDio.get() };
 	}
-
+	
+	
+	
 	public static double getAngle() {
 		double m = a * poten.getVoltage() + k;
 		while (m > 180)

@@ -58,7 +58,7 @@ public class Conf {
 	/**Speed of the intake wheels*/
 	public static final double rollSpeed = .75;
 	
-	public static final int launcherWait = 100;
+	public static final int launcherWait = 50;
 	public static final int resetWait = 50;
 
 }

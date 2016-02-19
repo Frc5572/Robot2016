@@ -3,6 +3,7 @@ package org.usfirst.frc.team5572.robot;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -77,12 +78,6 @@ public class Launcher {
 		roll.set(0);
 	}
 
-	public static void ease() {
-		lock.set(Value.kOff);
-		grabber.set(Value.kOff);
-		pull.set(Value.kOff);
-	}
-
 	private static void snoop() {
 		SmartDashboard.putNumber("Angle", Snoopr.getAngle());
 		SmartDashboard.putNumber("Anglev", Snoopr.getV());
@@ -92,6 +87,9 @@ public class Launcher {
 		SmartDashboard.putString("isShooting", isShooting + "");
 		SmartDashboard.putString("cancel", isCancelPressed + "");
 		SmartDashboard.putString("time", time + "");
+		SmartDashboard.putString("lock", lock.get() == Value.kOff ? "Off" : (lock.get() == Value.kForward ? "Forward" : "Reverse"));
+		SmartDashboard.putString("grabber", grabber.get() == Value.kOff ? "Off" : (grabber.get() == Value.kForward ? "Forward" : "Reverse"));
+		SmartDashboard.putString("puller", pull.get() == Value.kOff ? "Off" : (pull.get() == Value.kForward ? "Forward" : "Reverse"));
 	}
 
 	private static int time = 0;
@@ -166,16 +164,14 @@ public class Launcher {
 				return;
 			}
 			check = false;
-			grabber.set(Value.kReverse);
-			if (!dios[0]) {
+			if (dios[1]) {
+				pull.set(Value.kForward);
+			}else if (!dios[0]) {
 				pull.set(Value.kReverse);
 				return;
 			}
+			grabber.set(Value.kReverse);
 			lock.set(Value.kReverse);
-			if (dios[1]) {
-				pull.set(Value.kForward);
-			}
-
 		}
 	}
 
