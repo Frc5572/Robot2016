@@ -17,9 +17,9 @@ public class Launcher {
 	private static DoubleSolenoid pull;
 	private static DoubleSolenoid lock;
 	private static DoubleSolenoid unknown;
-	/**Talon for cannon rotation*/
+	/** Talon for cannon rotation */
 	private static SpeedController sc;
-	/**Talon for intake rotation*/
+	/** Talon for intake rotation */
 	private static SpeedController roll;
 
 	public static void init() {
@@ -98,29 +98,37 @@ public class Launcher {
 
 	private static boolean run = false;
 	private static int isShooting = 0;
-	private static boolean isCancelPressed = false;
+	private static boolean isCancelPressed = false, check = true;
 
 	public static void end() {
-		ease();
+		begin();
 	}
 
 	public static void begin() {
 		lock.set(Value.kForward); // unlock trigger
 		grabber.set(Value.kReverse); // close grabber
 		pull.set(Value.kForward); // uncock
+		run = false;
 	}
 
 	public static void update() {
 		changeAngle(DriveStation.b_y());
 		snoop();
+		if (DriveStation.b_getKey(button_cancel) && !isCancelPressed) {
+			run = !run;
+			isCancelPressed = true;
+		}
+		if (!DriveStation.b_getKey(button_cancel)) {
+			isCancelPressed = false;
+		}
 		if (time > 0) {
 			time--;
 			return;
 		}
-		if(DriveStation.b_getKey(button_oclaw)){
+		if (DriveStation.b_getKey(button_oclaw)) {
 			openClaw();
 		}
-		if(DriveStation.b_getKey(button_cclaw)){
+		if (DriveStation.b_getKey(button_cclaw)) {
 			closeClaw();
 		}
 		if (DriveStation.b_getKey(button_roll)) {
@@ -132,34 +140,32 @@ public class Launcher {
 		}
 		// Cock, lock, grab
 		boolean dios[] = Snoopr.getDio();
-		if (DriveStation.b_getKey(button_cancel) && !isCancelPressed) {
-			run = !run;
-			isCancelPressed = true;
-		}
-		if (!DriveStation.b_getKey(button_cancel)) {
-			isCancelPressed = false;
-		}
-		if (!run)
-			return;
 		if (isShooting != 0) {
 			if (isShooting == 1) {
 				grabber.set(Value.kForward);
 				if (!dios[2]) {
 					isShooting = 2;
-					time = 600;
+					time = launcherWait;
 				}
 				return;
 			}
 			isShooting = 0;
 			lock.set(Value.kForward);
-			time = 200;
+			time = resetWait;
 		} else {
 			if (DriveStation.b_getKey(button_shoot) && dios[1]) {
 				isShooting = 1;
-			}
-			if (comp.getCompressorCurrent() > 9) {
+				check = true;
 				return;
 			}
+			if (!run) {
+
+				return;
+			}
+			if (comp.getCompressorCurrent() > 9 && check) {
+				return;
+			}
+			check = false;
 			grabber.set(Value.kReverse);
 			if (!dios[0]) {
 				pull.set(Value.kReverse);
@@ -182,6 +188,8 @@ public class Launcher {
 	}
 
 	public static void changeAngle(double value) {
+		if (value > 0.05)
+			Snoopr.markAngleDirty();
 		value = limit(value * -1);
 		value = value < 0 ? value * cannon_motor_coef_up : value * cannon_motor_coef_down;
 		sc.set(value);

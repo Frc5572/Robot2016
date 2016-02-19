@@ -34,16 +34,8 @@ public class DriveTrain {
 		double y = k * DriveStation.a_y();
 		double x = k * DriveStation.a_x();
 		double l, r;
-		if (y >= 0.0) {
-			y = (y * y);
-		} else {
-			y = -(y * y);
-		}
-		if (x >= 0.0) {
-			x = (x * x);
-		} else {
-			x = -(x * x);
-		}
+		x = signum(x) * (x * x);
+		y = signum(y) * (y * y);
 		if (signum(x) == signum(y)) {
 			r = signum(y) * max(y * signum(y), x * signum(x));
 			l = y - x;

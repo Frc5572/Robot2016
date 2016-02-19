@@ -49,13 +49,16 @@ public class Conf {
 		return d > 1 ? 1 : (d < -1 ? -1 : d);
 	}
 
-	public static final double v0 = 0.005;
-	public static final double v1 = 4.500;
+	public static final double v1 = 4.2;
+	public static final double v0 = 2.63;
 
-	public static final double a0 = -43;
-	public static final double a1 = 32;
+	public static final double a1 = 63;
+	public static final double a0 = -44;
 	
 	/**Speed of the intake wheels*/
 	public static final double rollSpeed = .75;
+	
+	public static final int launcherWait = 100;
+	public static final int resetWait = 50;
 
 }

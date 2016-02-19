@@ -2,15 +2,7 @@
 package org.usfirst.frc.team5572.robot;
 
 import edu.wpi.first.wpilibj.SampleRobot;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This is a demo program showing the use of the RobotDrive class. The
@@ -75,7 +67,9 @@ public class Robot extends SampleRobot {
 	 */
 	public void operatorControl() {
 		Launcher.begin();
+		DriveStation.beginCamera();
 		while (isOperatorControl() && isEnabled()) {
+			DriveStation.updateCamera();
 			DriveTrain.teleop();
 			try {
 				Launcher.update();
@@ -84,6 +78,7 @@ public class Robot extends SampleRobot {
 			}
 			Timer.delay(0.005); // wait for a motor update time
 		}
+		DriveStation.endCamera();
 		Launcher.end();
 	}
 
