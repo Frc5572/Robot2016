@@ -34,7 +34,7 @@ public class Launcher {
 		roll = new CANTalon(3); // Talon for intake rotation
 	}
 
-	public static double getComp() {
+	/*public static double getComp() {
 		return comp.getCompressorCurrent();
 	}
 
@@ -45,7 +45,7 @@ public class Launcher {
 	public static void release() {
 		lock.set(Value.kForward);
 	}
-
+*/
 	public static void openClaw() {
 		grabber.set(Value.kForward);
 	}
@@ -53,7 +53,7 @@ public class Launcher {
 	public static void closeClaw() {
 		grabber.set(Value.kReverse);
 	}
-
+/*
 	public static void _cock() {
 		pull.set(Value.kReverse);
 	}
@@ -69,7 +69,8 @@ public class Launcher {
 	public static void uncock() {
 		pull.set(Value.kForward);
 	}
-
+*/
+	
 	public static void roll() {
 		roll.set(-.75);
 	}
@@ -81,11 +82,11 @@ public class Launcher {
 	private static void snoop() {
 		SmartDashboard.putNumber("Angle", Snoopr.getAngle());
 		SmartDashboard.putNumber("Anglev", Snoopr.getV());
-		SmartDashboard.putNumber("Pressure", getComp());
 		SmartDashboard.putString("Dios", m(Snoopr.getDio()));
 		SmartDashboard.putString("run", run + "");
 		SmartDashboard.putString("isShooting", isShooting + "");
 		SmartDashboard.putString("cancel", isCancelPressed + "");
+		SmartDashboard.putNumber("check", check ? 1 : 0);
 		SmartDashboard.putString("time", time + "");
 		SmartDashboard.putString("lock", lock.get() == Value.kOff ? "Off" : (lock.get() == Value.kForward ? "Forward" : "Reverse"));
 		SmartDashboard.putString("grabber", grabber.get() == Value.kOff ? "Off" : (grabber.get() == Value.kForward ? "Forward" : "Reverse"));
@@ -113,7 +114,7 @@ public class Launcher {
 		changeAngle(DriveStation.b_y());
 		snoop();
 		if (DriveStation.b_getKey(button_cancel) && !isCancelPressed) {
-			run = !run;
+			run = true;
 			isCancelPressed = true;
 		}
 		if (!DriveStation.b_getKey(button_cancel)) {
@@ -121,6 +122,7 @@ public class Launcher {
 		}
 		if (time > 0) {
 			time--;
+			SmartDashboard.putString("Return State","A");
 			return;
 		}
 		if (DriveStation.b_getKey(button_oclaw)) {
@@ -145,22 +147,26 @@ public class Launcher {
 					isShooting = 2;
 					time = launcherWait;
 				}
+				SmartDashboard.putString("Return State","B");
 				return;
 			}
 			isShooting = 0;
 			lock.set(Value.kForward);
 			time = resetWait;
+			run = false;
 		} else {
 			if (DriveStation.b_getKey(button_shoot) && dios[1]) {
 				isShooting = 1;
 				check = true;
+				SmartDashboard.putString("Return State","C");
 				return;
 			}
 			if (!run) {
-
+				SmartDashboard.putString("Return State","D");
 				return;
 			}
-			if (comp.getCompressorCurrent() > 9 && check) {
+			if (!comp.getPressureSwitchValue() && check) {
+				SmartDashboard.putString("Return State","E");
 				return;
 			}
 			check = false;
@@ -168,10 +174,12 @@ public class Launcher {
 				pull.set(Value.kForward);
 			}else if (!dios[0]) {
 				pull.set(Value.kReverse);
+				SmartDashboard.putString("Return State","F");
 				return;
 			}
 			grabber.set(Value.kReverse);
 			lock.set(Value.kReverse);
+			SmartDashboard.putString("Return State","G");
 		}
 	}
 

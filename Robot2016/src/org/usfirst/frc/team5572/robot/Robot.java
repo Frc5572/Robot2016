@@ -44,7 +44,7 @@ public class Robot extends SampleRobot {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 	public void autonomous() {
-		DriveTrain.drivelr(.35, .35);
+		//DriveTrain.drivelr(.35, .35);
 		while (isAutonomous() && isEnabled()) {
 
 		}
