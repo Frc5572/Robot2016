@@ -21,8 +21,6 @@ public class Snoopr {
 	private static final double k = a1 - a * v1; // Voltage constant for
 													// potentiometer
 
-	private static double min = -1, max = -1;
-
 	public static void init() {
 		ahrs = new AHRS(SPI.Port.kMXP);
 		left = new Encoder(5, 6);
@@ -33,10 +31,6 @@ public class Snoopr {
 		lockDio = new DigitalInput(1);
 	}
 
-	public static void markAngleDirty() {
-		min = -1;
-	}
-
 	public static double getTotalYaw() {
 		return ahrs.getAngle();
 	}
@@ -44,31 +38,26 @@ public class Snoopr {
 	public static boolean[] getDio() {
 		return new boolean[] { cockDio.get(), !lockDio.get(), grabberDio.get() };
 	}
-	
-	
-	
-	public static double getAngle() {
-		double m = a * poten.getVoltage() + k;
-		while (m > 180)
-			m -= 360;
-		while (m < -180)
-			m += 360;
-		if (min == -1) {
-			min = m;
-			max = m;
-		}
-		max = max > m ? max : m;
-		min = min < m ? min : m;
-		return m/* (max + min)/2 */;
-	}
 
-	public static double getV() {
-		double m = poten.getVoltage();
+	public static double getAngle() {
+		double m = a * getV() + k;
 		while (m > 180)
 			m -= 360;
 		while (m < -180)
 			m += 360;
 		return m;
+	}
+
+	public static double getV() {
+		double m = 0, max = -1, min = -1;
+		for (int i = 0; i < potentiometer_avg_amnt; i++) {
+			m += poten.getVoltage();
+			max = max == -1 ? m : (max > m ? max : m);
+			min = min == -1 ? m : (min < m ? min : m);
+		}
+		m -= max;
+		m -= min;
+		return m / (potentiometer_avg_amnt - 2);
 	}
 
 	public static void zero() {
@@ -81,6 +70,11 @@ public class Snoopr {
 
 	public static double getRightEncoderDistance() {
 		return right.get();
+	}
+	
+	public static void resetEncoders(){
+		right.reset();
+		left.reset();
 	}
 
 }

@@ -40,11 +40,13 @@ public class Conf {
 	/** Solenoid id for the lifters */
 	public static final int unknown_forward = 0;
 
-	/** Solenoid Reverse id. Automatically Generated on startup, do not change */
+	/**
+	 * Solenoid Reverse id. Automatically Generated on startup, do not change
+	 */
 	public static final int grabber_reverse = grabber_forward + 4, pull_reverse = pull_forward + 4,
 			lock_reverse = lock_forward + 4, unknown_reverse = unknown_forward + 4;
-	
-	/**Limit the value to between -1 and 1*/
+
+	/** Limit the value to between -1 and 1 */
 	public static double limit(double d) {
 		return d > 1 ? 1 : (d < -1 ? -1 : d);
 	}
@@ -54,11 +56,19 @@ public class Conf {
 
 	public static final double a1 = 63;
 	public static final double a0 = -44;
-	
-	/**Speed of the intake wheels*/
+
+	/** Speed of the intake wheels */
 	public static final double rollSpeed = .75;
-	
+
 	public static final int launcherWait = 50;
 	public static final int resetWait = 50;
+
+	public static final int potentiometer_avg_amnt = 10;
+
+	public static final double straight_line_divisor = 20;
+
+	public static final double analog_play = 0.01;
+
+	public static final int tegra_channels[] = { 0, 5, 6, 7 }; // {analog, isYaw, isDist, request }
 
 }

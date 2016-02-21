@@ -3,6 +3,8 @@ package org.usfirst.frc.team5572.robot;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
 
+import static org.usfirst.frc.team5572.robot.Conf.*;
+
 public class DriveTrain {
 
 	private static final int[] leftCIMs = { 3, 4, 5 }; // PWM Channels
@@ -10,6 +12,8 @@ public class DriveTrain {
 
 	private static SpeedController[] left = new SpeedController[leftCIMs.length];
 	private static SpeedController[] right = new SpeedController[rightCIMs.length];
+
+	private static int currdist = -1;
 
 	public static void init() {
 		for (int i = 0; i < leftCIMs.length; i++) {
@@ -77,6 +81,24 @@ public class DriveTrain {
 			r = y + x;
 		}
 		drivelr(l, r);
+	}
+	
+	public static void driveStraightReset(){
+		currdist = -1;
+	}
+
+	public static boolean driveStraight(double speed, int dist) {
+		if (currdist == -1) {
+			currdist = dist;
+			Snoopr.resetEncoders();
+		}
+
+		double l = Snoopr.getLeftEncoderDistance();
+		double r = Snoopr.getLeftEncoderDistance();
+		if ((l + r) / 2 >= currdist)
+			return true;
+		drive(speed, (l - r) / straight_line_divisor);
+		return false;
 	}
 
 	private static double max(double a, double b) {

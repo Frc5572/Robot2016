@@ -39,7 +39,9 @@ public class StateMachine2 {
 		}
 		for(int i = 0; i < k.length; i++){
 			if(k[i]){
+				stateLists.get(i)[0].cleanup();
 				stateLists.set(i, shorten(stateLists.get(i)));
+				stateLists.get(i)[0].init();
 			}
 		}
 	}
