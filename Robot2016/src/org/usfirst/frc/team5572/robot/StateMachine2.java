@@ -22,6 +22,10 @@ public class StateMachine2 {
 		stateLists.add(states);
 	}
 	
+	public static void clear(){
+		stateLists.clear();
+	}
+	
 	private static <T> T[] shorten(T[] t){
 		return Arrays.copyOfRange(t, 1, t.length);
 	}
