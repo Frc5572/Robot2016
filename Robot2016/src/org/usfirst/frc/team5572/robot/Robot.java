@@ -1,9 +1,8 @@
-
 package org.usfirst.frc.team5572.robot;
 
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
-
+import edu.wpi.first.wpilibj.vision.USBCamera;
 /**
  * This is a demo program showing the use of the RobotDrive class. The
  * SampleRobot class is the base of a robot application that will automatically
@@ -28,6 +27,7 @@ public class Robot extends SampleRobot {
 		DriveTrain.init();
 		Snoopr.init();
 		Launcher.init();
+		
 	}
 
 	StateMachine currentStateMachine = null;
@@ -66,28 +66,39 @@ public class Robot extends SampleRobot {
 	 * Runs the motors with arcade steering.
 	 */
 	public void operatorControl() {
+		drive(false);
+	}
+	
+	private void drive(boolean test){
+		Timer timer = new Timer();
+		timer.start();
+		Timer delay = new Timer();
 		Launcher.begin();
 		DriveStation.beginCamera();
-		while (isOperatorControl() && isEnabled()) {
+		while (((isOperatorControl() && !test) || (isTest() && test)) && isEnabled()) {
+			timer.start();
 			DriveStation.updateCamera();
 			DriveTrain.teleop();
+			Lift.update(135-timer.get() <= 20 || test);
 			try {
 				Launcher.update();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Timer.delay(0.005); // wait for a motor update time
+			while(timer.get() < 0.005);
+			timer.stop();
+			timer.reset();
 		}
 		DriveStation.endCamera();
 		Launcher.end();
+		timer.stop();
 	}
 
 	/**
 	 * Runs during test mode
 	 */
 	public void test() {
-		while (isTest() && isEnabled()) {
-		}
+		drive(true);
 	}
 
 	StateMachine auto1_State_01 = new StateMachine("auto1_State_01") {

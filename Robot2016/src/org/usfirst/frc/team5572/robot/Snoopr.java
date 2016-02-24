@@ -36,7 +36,7 @@ public class Snoopr {
 	}
 
 	public static boolean[] getDio() {
-		return new boolean[] { cockDio.get(), !lockDio.get(), grabberDio.get() };
+		return new boolean[] { !cockDio.get(), !lockDio.get(), grabberDio.get() };
 	}
 
 	public static double getAngle() {
@@ -49,7 +49,7 @@ public class Snoopr {
 	}
 
 	public static double getV() {
-		double m = 0, max = -1, min = -1;
+		/*double m = 0, max = -1, min = -1;
 		for (int i = 0; i < potentiometer_avg_amnt; i++) {
 			m += poten.getVoltage();
 			max = max == -1 ? m : (max > m ? max : m);
@@ -57,7 +57,8 @@ public class Snoopr {
 		}
 		m -= max;
 		m -= min;
-		return m / (potentiometer_avg_amnt - 2);
+		*/
+		return /*m / (potentiometer_avg_amnt - 2)*/ poten.getVoltage();
 	}
 
 	public static void zero() {

@@ -1,14 +1,19 @@
 package org.usfirst.frc.team5572.robot;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.DrawMode;
+import com.ni.vision.NIVision.GetImageSizeResult;
 import com.ni.vision.NIVision.Image;
+import com.ni.vision.NIVision.Point;
 import com.ni.vision.NIVision.Rect;
 import com.ni.vision.NIVision.ShapeMode;
 
+import edu.wpi.first.wpilibj.vision.USBCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,8 +30,17 @@ public class DriveStation {
 	private static Joystick stick1;
 
 	private static List<Rect> shootingSpots = new ArrayList<Rect>();
-
+	private static USBCamera usb;
 	public static void init() {
+		usb=new USBCamera("cam0");
+		usb.openCamera();
+		
+		usb.startCapture();
+		usb.setExposureAuto();
+		usb.setBrightness(100);
+		usb.updateSettings();
+		usb.stopCapture();
+		usb.closeCamera();
 		stick0 = new Joystick(joystick0);
 		stick1 = new Joystick(joystick1);
 		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
@@ -77,6 +91,7 @@ public class DriveStation {
 
 	public static void endCamera() {
 		NIVision.IMAQdxStopAcquisition(session);
+	
 	}
 
 	private static int tb = 0, lr = 0;
@@ -90,13 +105,14 @@ public class DriveStation {
 			tb--;
 		if (a_getKey(2))
 			tb++;
+		
 		NIVision.IMAQdxGrab(session, frame, 1);
-		CameraServer.getInstance().setImage(frame);
 		for (Rect r : shootingSpots) {
 			NIVision.imaqDrawShapeOnImage(frame, frame, r, DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 1);
 		}
 		NIVision.Rect rect = new Rect(lr, tb, 10, 10);
 		NIVision.imaqDrawShapeOnImage(frame, frame, rect, DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 1);
+		CameraServer.getInstance().setImage(frame);
 		if (a_getKey(7)) {
 			CameraServer.getInstance().setQuality(CameraServer.getInstance().getQuality() - 1);
 		}

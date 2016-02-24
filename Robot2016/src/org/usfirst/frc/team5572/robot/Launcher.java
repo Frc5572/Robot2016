@@ -24,11 +24,11 @@ public class Launcher {
 
 	public static void init() {
 		PowerDistributionPanel.setDefaultSolenoidModule(12);
+		
 		comp = new Compressor(12);
 		grabber = new DoubleSolenoid(grabber_forward, grabber_reverse);
 		pull = new DoubleSolenoid(pull_forward, pull_reverse);
 		lock = new DoubleSolenoid(lock_forward, lock_reverse);
-		unknown = new DoubleSolenoid(unknown_forward, unknown_reverse);
 		sc = new CANTalon(1); // Talon for cannon rotation
 		roll = new CANTalon(3); // Talon for intake rotation
 	}
@@ -104,6 +104,8 @@ public class Launcher {
 	private static int isShooting = 0;
 	private static boolean isCancelPressed = false, isUpPressed = false, check = true, manual = false;
 
+	private static boolean overrideClaw = false;
+
 	public static void end() {
 		begin();
 	}
@@ -118,24 +120,19 @@ public class Launcher {
 	public static void update() {
 		changeAngle(DriveStation.b_y());
 		snoop(); // Send data to the SmartDashboard
-		if (DriveStation.a_getKey(11) && !isUpPressed) {
-			isUpPressed = true;
-			unknown.set(unknown.get() == Value.kForward ? Value.kReverse : Value.kForward);
-		}
-		if (!DriveStation.a_getKey(11)) {
-			isUpPressed = false;
-		}
 		if (DriveStation.b_getKey(button_oclaw)) { // Overrides the claws
 													// current state. Will
 													// not fire unless run
 													// is false
 			openClaw();
+			overrideClaw = true;
 		}
 		if (DriveStation.b_getKey(button_cclaw)) { // Overrides the claws
 													// current state. Will
 													// not fire unless run
 													// is false
 			closeClaw();
+			overrideClaw = false;
 		}
 		if (DriveStation.b_getKey(button_roll)) { // Roll the intake wheel
 													// in, so that the ball
@@ -245,11 +242,12 @@ public class Launcher {
 				} else if (!dios[0]) { // Checks if the cock sensor is not being
 										// activated
 					pull.set(Value.kReverse); // Extends the cocking pistons
-					SmartDashboard.putString("Launcher Error Code", "F");
+					SmartDashboard.putString("Launcher Error Code", "Test");
 					return;
 				}
-				grabber.set(Value.kReverse); // Close the grabber
 				lock.set(Value.kReverse); // Lock the lock
+				if (!overrideClaw)
+					closeClaw();
 				SmartDashboard.putString("Launcher Error Code", "G");
 			}
 		}

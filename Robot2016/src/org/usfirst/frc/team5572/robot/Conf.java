@@ -38,18 +38,24 @@ public class Conf {
 	/** Solenoid id for the lock */
 	public static final int lock_forward = 1;
 	/** Solenoid id for the lifters */
-	public static final int unknown_forward = 0;
+	public static final int plat_forward = 0;
 
 	/**
 	 * Solenoid Reverse id. Automatically Generated on startup, do not change
 	 */
 	public static final int grabber_reverse = grabber_forward + 4, pull_reverse = pull_forward + 4,
-			lock_reverse = lock_forward + 4, unknown_reverse = unknown_forward + 4;
+			lock_reverse = lock_forward + 4, plat_reverse = plat_forward + 4;
+	
+	public static final int lift_forward = 8;
+	public static final int lift_reverse = 9;
 
 	/** Limit the value to between -1 and 1 */
 	public static double limit(double d) {
 		return d > 1 ? 1 : (d < -1 ? -1 : d);
 	}
+
+	/** Where the Y is the aim of the robot for the camera **/
+	public static final int yAim = 255;
 
 	public static final double v1 = 4.2;
 	public static final double v0 = 2.63;
@@ -58,9 +64,9 @@ public class Conf {
 	public static final double a0 = -44;
 
 	/** Speed of the intake wheels */
-	public static final double rollSpeed = .75;
+	public static final double rollSpeed = 1;
 
-	public static final int launcherWait = 50;
+	public static final int launcherWait = 35;
 	public static final int resetWait = 50;
 
 	public static final int potentiometer_avg_amnt = 10;
@@ -69,6 +75,9 @@ public class Conf {
 
 	public static final double analog_play = 0.01;
 
-	public static final int tegra_channels[] = { 0, 5, 6, 7 }; // {analog, isYaw, isDist, request }
+	public static final int tegra_channels[] = { 0, 5, 6, 7 }; // {analog,
+																// isYaw,
+																// isDist,
+																// request }
 
 }
