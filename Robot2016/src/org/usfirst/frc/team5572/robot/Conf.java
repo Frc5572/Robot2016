@@ -75,9 +75,8 @@ public class Conf {
 
 	public static final double analog_play = 0.01;
 
-	public static final int tegra_channels[] = { 0, 5, 6, 7 }; // {analog,
-																// isYaw,
-																// isDist,
+	public static final int tegra_channels[] = { 0, 7, 8 }; // {analog,
+																// in,
 																// request }
 
 }

@@ -51,7 +51,7 @@ public class Snoopr {
 	public static double getV() {
 		/*double m = 0, max = -1, min = -1;
 		for (int i = 0; i < potentiometer_avg_amnt; i++) {
-			m += poten.getVoltage();
+			m += poten.getValue()/819.2;
 			max = max == -1 ? m : (max > m ? max : m);
 			min = min == -1 ? m : (min < m ? min : m);
 		}
