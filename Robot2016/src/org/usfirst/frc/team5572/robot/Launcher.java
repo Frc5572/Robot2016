@@ -13,8 +13,8 @@ import static org.usfirst.frc.team5572.robot.Conf.*;
 public class Launcher {
 
 	private static Compressor comp;
-	private static DoubleSolenoid grabber;
-	private static DoubleSolenoid pull;
+	private static DoubleSolenoid IntakeSystem;
+	private static DoubleSolenoid cockingSystem;
 	private static DoubleSolenoid lock;
 	private static DoubleSolenoid unknown;
 	/** Talon for cannon rotation */
@@ -26,9 +26,9 @@ public class Launcher {
 		PowerDistributionPanel.setDefaultSolenoidModule(12);
 		
 		comp = new Compressor(12);
-		grabber = new DoubleSolenoid(grabber_forward, grabber_reverse);
-		pull = new DoubleSolenoid(pull_forward, pull_reverse);
-		lock = new DoubleSolenoid(lock_forward, lock_reverse);
+		IntakeSystem = new DoubleSolenoid(12, grabber_forward, grabber_reverse);//Intake Sysytem
+		cockingSystem = new DoubleSolenoid(12, pull_forward, pull_reverse); // Cocking system.
+		lock = new DoubleSolenoid(12, lock_forward, lock_reverse);
 		sc = new CANTalon(1); // Talon for cannon rotation
 		roll = new CANTalon(3); // Talon for intake rotation
 	}
@@ -48,16 +48,16 @@ public class Launcher {
 
 	// */
 	public static void openClaw() {
-		grabber.set(Value.kForward);
+		IntakeSystem.set(Value.kForward);
 	}
 
 	public static void closeClaw() {
-		grabber.set(Value.kReverse);
+		IntakeSystem.set(Value.kReverse);
 	}
 
 	// *
 	public static void _cock() {
-		pull.set(Value.kReverse);
+		cockingSystem.set(Value.kReverse);
 	}
 
 	public static void unknownOpen() {
@@ -69,7 +69,7 @@ public class Launcher {
 	}
 
 	public static void uncock() {
-		pull.set(Value.kForward);
+		cockingSystem.set(Value.kForward);
 	}
 	// */
 
@@ -93,9 +93,9 @@ public class Launcher {
 		SmartDashboard.putString("lock",
 				lock.get() == Value.kOff ? "Off" : (lock.get() == Value.kForward ? "Forward" : "Reverse"));
 		SmartDashboard.putString("grabber",
-				grabber.get() == Value.kOff ? "Off" : (grabber.get() == Value.kForward ? "Forward" : "Reverse"));
+				IntakeSystem.get() == Value.kOff ? "Off" : (IntakeSystem.get() == Value.kForward ? "Forward" : "Reverse"));
 		SmartDashboard.putString("puller",
-				pull.get() == Value.kOff ? "Off" : (pull.get() == Value.kForward ? "Forward" : "Reverse"));
+				cockingSystem.get() == Value.kOff ? "Off" : (cockingSystem.get() == Value.kForward ? "Forward" : "Reverse"));
 	}
 
 	private static int time = 0;
@@ -112,8 +112,8 @@ public class Launcher {
 
 	public static void begin() {
 		lock.set(Value.kForward); // unlock trigger
-		grabber.set(Value.kReverse); // close grabber
-		pull.set(Value.kForward); // uncock
+		IntakeSystem.set(Value.kReverse); // close grabber
+		cockingSystem.set(Value.kForward); // uncock
 		run = false;
 	}
 
@@ -160,9 +160,9 @@ public class Launcher {
 		}
 		if (manual) {
 			if (DriveStation.b_getKey(3)) {
-				pull.set(Value.kReverse);
+				cockingSystem.set(Value.kReverse);
 			} else if (DriveStation.b_getKey(5)) {
-				pull.set(Value.kForward);
+				cockingSystem.set(Value.kForward);
 			}
 			if (DriveStation.b_getKey(4)) {
 				lock.set(Value.kReverse);
@@ -185,7 +185,7 @@ public class Launcher {
 			boolean dios[] = Snoopr.getDio(); // Cock, lock, grab
 			if (isShooting != 0) { // Is in the shooting phase
 				if (isShooting == 1) { // Opens claw
-					grabber.set(Value.kForward);
+					IntakeSystem.set(Value.kForward);
 					if (!dios[2]) { // Claw is open
 						isShooting = 2;
 						time = launcherWait; // Wait for $launcherWait seconds
@@ -238,10 +238,10 @@ public class Launcher {
 								// that the cocking phase does not stop midphase
 								// due to loss of pressure.
 				if (dios[1]) { // Checks if the lock is in place
-					pull.set(Value.kForward); // Retracts the cocking pistons
+					cockingSystem.set(Value.kForward); // Retracts the cocking pistons
 				} else if (!dios[0]) { // Checks if the cock sensor is not being
 										// activated
-					pull.set(Value.kReverse); // Extends the cocking pistons
+					cockingSystem.set(Value.kReverse); // Extends the cocking pistons
 					SmartDashboard.putString("Launcher Error Code", "Test");
 					return;
 				}

@@ -78,5 +78,7 @@ public class Conf {
 	public static final int tegra_channels[] = { 0, 7, 8 }; // {analog,
 																// in,
 																// request }
-
+	
+	public static final double autoThresh = 0.5;
+	
 }
