@@ -7,8 +7,8 @@ import static org.usfirst.frc.team5572.robot.Conf.*;
 
 public class DriveTrain {
 
-	private static final int[] leftCIMs = { 3, 4, 5 }; // PWM Channels
-	private static final int[] rightCIMs = { 0, 1, 2 }; // PWM Channels
+	private static final int[] leftCIMs = { 3, 5 }; // PWM Channels
+	private static final int[] rightCIMs = { 0, 1 }; // PWM Channels
 
 	private static SpeedController[] left = new SpeedController[leftCIMs.length];
 	private static SpeedController[] right = new SpeedController[rightCIMs.length];

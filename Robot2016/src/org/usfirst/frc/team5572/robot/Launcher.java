@@ -24,10 +24,12 @@ public class Launcher {
 
 	public static void init() {
 		PowerDistributionPanel.setDefaultSolenoidModule(12);
-		
+
 		comp = new Compressor(12);
-		IntakeSystem = new DoubleSolenoid(12, grabber_forward, grabber_reverse);//Intake Sysytem
-		cockingSystem = new DoubleSolenoid(12, pull_forward, pull_reverse); // Cocking system.
+		IntakeSystem = new DoubleSolenoid(12, grabber_forward, grabber_reverse);// Intake
+																				// Sysytem
+		cockingSystem = new DoubleSolenoid(12, pull_forward, pull_reverse); // Cocking
+																			// system.
 		lock = new DoubleSolenoid(12, lock_forward, lock_reverse);
 		sc = new CANTalon(1); // Talon for cannon rotation
 		roll = new CANTalon(3); // Talon for intake rotation
@@ -92,17 +94,19 @@ public class Launcher {
 		SmartDashboard.putString("time", time + "");
 		SmartDashboard.putString("lock",
 				lock.get() == Value.kOff ? "Off" : (lock.get() == Value.kForward ? "Forward" : "Reverse"));
-		SmartDashboard.putString("grabber",
-				IntakeSystem.get() == Value.kOff ? "Off" : (IntakeSystem.get() == Value.kForward ? "Forward" : "Reverse"));
-		SmartDashboard.putString("puller",
-				cockingSystem.get() == Value.kOff ? "Off" : (cockingSystem.get() == Value.kForward ? "Forward" : "Reverse"));
+		SmartDashboard.putString("grabber", IntakeSystem.get() == Value.kOff ? "Off"
+				: (IntakeSystem.get() == Value.kForward ? "Forward" : "Reverse"));
+		SmartDashboard.putString("puller", cockingSystem.get() == Value.kOff ? "Off"
+				: (cockingSystem.get() == Value.kForward ? "Forward" : "Reverse"));
+		SmartDashboard.putNumber("PressureV", Snoopr.getPressureSwitchV());
+		SmartDashboard.putNumber("Pressure", Snoopr.getPressure());
 	}
 
 	private static int time = 0;
 
 	private static boolean run = false;
 	private static int isShooting = 0;
-	private static boolean isCancelPressed = false, isUpPressed = false, check = true, manual = false;
+	private static boolean isCancelPressed = false, check = true, manual = false;
 
 	private static boolean overrideClaw = false;
 
@@ -118,7 +122,7 @@ public class Launcher {
 	}
 
 	public static void update() {
-		changeAngle(DriveStation.b_y());
+		changeAngle(DriveStation.b_y() * DriveStation.b_getThrottle());
 		snoop(); // Send data to the SmartDashboard
 		if (DriveStation.b_getKey(button_oclaw)) { // Overrides the claws
 													// current state. Will
@@ -223,14 +227,18 @@ public class Launcher {
 					SmartDashboard.putString("Launcher Error Code", "D");
 					return;
 				}
-				if (!comp.getPressureSwitchValue() && check) { // Checks
-																// compressor to
-																// makes sure
-																// enough
-																// pressure is
-																// built up to
-																// start
-																// auto-cocking
+				if (Snoopr.getPressureSwitchV() < 1.78 && check) { // Checks
+																	// compressor
+																	// to
+																	// makes
+																	// sure
+																	// enough
+																	// pressure
+																	// is
+																	// built up
+																	// to
+																	// start
+																	// auto-cocking
 					SmartDashboard.putString("Launcher Error Code", "E");
 					return;
 				}
@@ -238,10 +246,12 @@ public class Launcher {
 								// that the cocking phase does not stop midphase
 								// due to loss of pressure.
 				if (dios[1]) { // Checks if the lock is in place
-					cockingSystem.set(Value.kForward); // Retracts the cocking pistons
+					cockingSystem.set(Value.kForward); // Retracts the cocking
+														// pistons
 				} else if (!dios[0]) { // Checks if the cock sensor is not being
 										// activated
-					cockingSystem.set(Value.kReverse); // Extends the cocking pistons
+					cockingSystem.set(Value.kReverse); // Extends the cocking
+														// pistons
 					SmartDashboard.putString("Launcher Error Code", "Test");
 					return;
 				}
@@ -263,7 +273,7 @@ public class Launcher {
 
 	public static void changeAngle(double value) {
 		value = limit(value * -1);
-		value = value < 0 ? value * cannon_motor_coef_up : value * cannon_motor_coef_down;
+		value = value < 0 ? value : value * cannon_motor_coef;
 		sc.set(value);
 	}
 

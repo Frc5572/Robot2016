@@ -26,6 +26,7 @@ public class Robot extends SampleRobot {
 		DriveStation.init();
 		DriveTrain.init();
 		Snoopr.init();
+		Lift.init();
 		Launcher.init();
 		
 	}

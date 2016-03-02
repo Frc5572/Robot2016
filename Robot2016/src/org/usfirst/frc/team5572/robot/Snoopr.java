@@ -13,19 +13,23 @@ public class Snoopr {
 
 	private static AHRS ahrs; // NAV-X
 	private static Encoder left, right;
-	private static AnalogInput poten; // Cannon Potentiometer
+	private static AnalogInput poten, pressureSwitch; // Cannon Potentiometer
 	private static DigitalInput cockDio, lockDio, grabberDio; // Digital inputs
 	private static final double a = (a1 - a0) / (v1 - v0); // Voltage
 															// coefficient for
 															// potentiometer
 	private static final double k = a1 - a * v1; // Voltage constant for
 													// potentiometer
+	private static final double pa = (p3 - p2) / (v3 - v2);
+	private static final double pk = p3 - pa * v3;
 
 	public static void init() {
 		ahrs = new AHRS(SPI.Port.kMXP);
+		ahrs.reset();
 		left = new Encoder(5, 6);
 		right = new Encoder(3, 4);
 		poten = new AnalogInput(2);
+		pressureSwitch = new AnalogInput(1);
 		grabberDio = new DigitalInput(2);
 		cockDio = new DigitalInput(0);
 		lockDio = new DigitalInput(1);
@@ -49,16 +53,13 @@ public class Snoopr {
 	}
 
 	public static double getV() {
-		/*double m = 0, max = -1, min = -1;
-		for (int i = 0; i < potentiometer_avg_amnt; i++) {
-			m += poten.getValue()/819.2;
-			max = max == -1 ? m : (max > m ? max : m);
-			min = min == -1 ? m : (min < m ? min : m);
-		}
-		m -= max;
-		m -= min;
-		*/
-		return /*m / (potentiometer_avg_amnt - 2)*/ poten.getAverageVoltage();
+		/*
+		 * double m = 0, max = -1, min = -1; for (int i = 0; i <
+		 * potentiometer_avg_amnt; i++) { m += poten.getValue()/819.2; max = max
+		 * == -1 ? m : (max > m ? max : m); min = min == -1 ? m : (min < m ? min
+		 * : m); } m -= max; m -= min;
+		 */
+		return /* m / (potentiometer_avg_amnt - 2) */ poten.getAverageVoltage();
 	}
 
 	public static void zero() {
@@ -72,10 +73,18 @@ public class Snoopr {
 	public static double getRightEncoderDistance() {
 		return right.get();
 	}
-	
-	public static void resetEncoders(){
+
+	public static void resetEncoders() {
 		right.reset();
 		left.reset();
+	}
+
+	public static double getPressureSwitchV() {
+		return pressureSwitch.getAverageVoltage();
+	}
+
+	public static double getPressure() {
+		return getPressureSwitchV() * pa + pk;
 	}
 
 }

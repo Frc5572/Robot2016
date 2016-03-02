@@ -19,12 +19,7 @@ public class Conf {
 	 * Power coefficient while the launcher is lowering its angle. Should not
 	 * exceed 1
 	 */
-	public static final double cannon_motor_coef_down = 0.5;
-	/**
-	 * Power coefficient while the launcher is raising its angle. Should not
-	 * exceed 1
-	 */
-	public static final double cannon_motor_coef_up = 0.75;
+	public static final double cannon_motor_coef = 2d/3d;
 
 	/** Button that turns on or off the automatic cocking mechanism */
 	public static final int button_cancel = 7;
@@ -57,11 +52,17 @@ public class Conf {
 	/** Where the Y is the aim of the robot for the camera **/
 	public static final int yAim = 255;
 
-	public static final double v1 = 4.2;
-	public static final double v0 = 2.63;
+	public static final double v1 = 4.895;
+	public static final double v0 = 2.96;
 
 	public static final double a1 = 63;
 	public static final double a0 = -44;
+	
+	public static final double v2 = 0;
+	public static final double v3 = 0;
+	
+	public static final double p2 = 0;
+	public static final double p3 = 0;
 
 	/** Speed of the intake wheels */
 	public static final double rollSpeed = 1;
