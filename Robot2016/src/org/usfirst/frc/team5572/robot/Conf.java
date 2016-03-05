@@ -67,7 +67,7 @@ public class Conf {
 	/** Speed of the intake wheels */
 	public static final double rollSpeed = 1;
 
-	public static final int launcherWait = 35;
+	public static final int launcherWait = 25;
 	public static final int resetWait = 50;
 
 	public static final int potentiometer_avg_amnt = 10;
@@ -81,5 +81,7 @@ public class Conf {
 																// request }
 	
 	public static final double autoThresh = 0.5;
+	
+	public static final int milliSecondsWaitJetson = 200;
 	
 }

@@ -82,8 +82,8 @@ public class DriveTrain {
 		}
 		drivelr(l, r);
 	}
-	
-	public static void driveStraightReset(){
+
+	public static void driveStraightReset() {
 		currdist = -1;
 	}
 
@@ -107,5 +107,21 @@ public class DriveTrain {
 
 	private static int signum(double a) {
 		return a == 0 ? 0 : (a > 0 ? 1 : -1);
+	}
+	
+	public static boolean setGlobalAngle(double angle, double thresh) {
+		double curr = Snoopr.getAngle();
+		if (Math.abs(angle - curr) <= thresh)
+			return true;
+		turn(angle - curr);
+		return false;
+	}
+
+	public static void turn(double angle) {
+		while (angle > 180)
+			angle -= 360;
+		while (angle < -180)
+			angle += 360;
+		drive(0, angle / 180);
 	}
 }

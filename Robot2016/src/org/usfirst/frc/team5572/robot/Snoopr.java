@@ -14,7 +14,8 @@ public class Snoopr {
 	private static AHRS ahrs; // NAV-X
 	private static Encoder left, right;
 	private static AnalogInput poten, pressureSwitch; // Cannon Potentiometer
-	private static DigitalInput cockDio, lockDio, grabberDio; // Digital inputs
+	private static DigitalInput cockDio, lockDio, grabberDio, liftBottom, liftTop; // Digital
+																					// inputs
 	private static final double a = (a1 - a0) / (v1 - v0); // Voltage
 															// coefficient for
 															// potentiometer
@@ -33,6 +34,8 @@ public class Snoopr {
 		grabberDio = new DigitalInput(2);
 		cockDio = new DigitalInput(0);
 		lockDio = new DigitalInput(1);
+		liftBottom = new DigitalInput(7);
+		liftTop = new DigitalInput(8);
 	}
 
 	public static double getTotalYaw() {
@@ -40,7 +43,7 @@ public class Snoopr {
 	}
 
 	public static boolean[] getDio() {
-		return new boolean[] { !cockDio.get(), !lockDio.get(), grabberDio.get() };
+		return new boolean[] { !cockDio.get(), !lockDio.get(), grabberDio.get(), liftBottom.get(), liftTop.get() };
 	}
 
 	public static double getAngle() {

@@ -57,6 +57,7 @@ public class i2c extends IterativeRobot {
             System.out.println( "Address 55: " + (char)(dat2a[1]));
             System.out.println( "Address 55: " + (char)(dat2a[0]));
             Timer.delay(1);		/* wait a second     */
+            
          }    	
     }
     

@@ -20,7 +20,7 @@ public class Lift {
 
 	private static boolean cancelPressed = false;
 
-	public static void update(boolean isEndGame) {
+	public static void update(boolean test) {
 		// if(!isEndGame) return;
 		if (DriveStation.a_getKey(11) && !cancelPressed) {
 			// Engage/Disengage
@@ -31,9 +31,13 @@ public class Lift {
 		}
 		if (DriveStation.a_getKey(10)) {
 			sc.set(0.8);
-		} else if (DriveStation.a_getKey(9)) {
-			sc.set(-0.8);
+		} else if ((DriveStation.a_getKey(9) && Snoopr.getDio()[4])) {
+			sc.set(-.8);
 		} else {
+			
+			sc.set(0);
+		}
+		if (!Snoopr.getDio()[3] && !test) {
 			sc.set(0);
 		}
 	}

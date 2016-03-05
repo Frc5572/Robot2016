@@ -2,7 +2,7 @@ package org.usfirst.frc.team5572.robot;
 
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.vision.USBCamera;
+
 /**
  * This is a demo program showing the use of the RobotDrive class. The
  * SampleRobot class is the base of a robot application that will automatically
@@ -28,7 +28,7 @@ public class Robot extends SampleRobot {
 		Snoopr.init();
 		Lift.init();
 		Launcher.init();
-		
+
 	}
 
 	StateMachine currentStateMachine = null;
@@ -45,11 +45,20 @@ public class Robot extends SampleRobot {
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 	public void autonomous() {
-		//DriveTrain.drivelr(.35, .35);
-		while (isAutonomous() && isEnabled()) {
-
-		}
+		// DriveTrain.drivelr(.35, .35);
+		Launcher.init();
+		Launcher.begin();
 		DriveTrain.drivelr(0, 0);
+		Launcher.openClaw();
+		while (!Launcher.setAngle(44, Conf.autoThresh, .3))
+			if (!isEnabled() || !isAutonomous())
+				break;
+		Launcher.changeAngle(0);
+		while (!Launcher.autofire())
+			if (!isEnabled() || !isAutonomous())
+				break;
+		if (isAutonomous() && isEnabled())
+			Launcher.fire();
 		/*
 		 * currentStateMachine = auto1_State_01;
 		 * currentStateMachine.startMachine(); while (isAutonomous() &&
@@ -69,24 +78,29 @@ public class Robot extends SampleRobot {
 	public void operatorControl() {
 		drive(false);
 	}
-	
-	private void drive(boolean test){
+
+	@Override
+	protected void disabled() {
+		Launcher.changeAngle(0);
+	}
+
+	private void drive(boolean test) {
 		Timer timer = new Timer();
 		timer.start();
-		Timer delay = new Timer();
 		Launcher.begin();
 		DriveStation.beginCamera();
 		while (((isOperatorControl() && !test) || (isTest() && test)) && isEnabled()) {
 			timer.start();
 			DriveStation.updateCamera();
 			DriveTrain.teleop();
-			Lift.update(135-timer.get() <= 20 || test);
+			Lift.update(test);
 			try {
 				Launcher.update();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			while(timer.get() < 0.005);
+			while (timer.get() < 0.005)
+				;
 			timer.stop();
 			timer.reset();
 		}

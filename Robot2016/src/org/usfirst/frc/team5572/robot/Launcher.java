@@ -35,6 +35,60 @@ public class Launcher {
 		roll = new CANTalon(3); // Talon for intake rotation
 	}
 
+	private static int accum = 0;
+
+	public static boolean setAngle(double angle, double threshold, double speed) {
+		double curr = Snoopr.getAngle();
+		if (Math.abs(curr - angle) <= threshold) {
+			accum++;
+			if (accum > 100)
+				return true;
+			return false;
+		}
+		accum = 0;
+		System.out.println(curr + ":" + limit((angle - curr) / 3));
+		changeAngle(limit((angle - curr) / 3) > 0 ? speed : -speed);
+		return false;
+	}
+
+	public static boolean setAngleV(double angle, double threshold, double speed) {
+		double curr = Snoopr.getV();
+		if (Math.abs(curr - angle) <= threshold)
+			return true;
+		System.out.println(curr + ":" + limit((angle - curr) / 2));
+		changeAngle((limit(angle - curr) > 0 ? 1 : -1) * speed);
+		return false;
+	}
+
+	public static boolean autofire() {
+		if (time > 0) {
+			time--;
+			return false;
+		}
+		boolean dios[] = Snoopr.getDio(); // Cock, lock, grab
+		if (dios[1]) { // Checks if the lock is in place
+			cockingSystem.set(Value.kForward); // Retracts the cocking
+												// pistons
+			time = 20;
+		} else if (!dios[0]) { // Checks if the cock sensor is not being
+								// activated
+			cockingSystem.set(Value.kReverse); // Extends the cocking
+												// pistons
+			return false;
+		}
+		lock.set(Value.kReverse); // Lock the lock
+
+		if (dios[0] && dios[1] && !dios[2]) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static void fire() {
+		lock.set(Value.kForward);
+	}
+
 	// *
 	public static double getComp() {
 		return comp.getCompressorCurrent();
@@ -119,10 +173,15 @@ public class Launcher {
 		IntakeSystem.set(Value.kReverse); // close grabber
 		cockingSystem.set(Value.kForward); // uncock
 		run = false;
+		SmartDashboard.putNumber("Set Angle", 0);
 	}
 
 	public static void update() {
 		changeAngle(DriveStation.b_y() * DriveStation.b_getThrottle());
+		if(DriveStation.b_getKey(2)){
+			double m = SmartDashboard.getNumber("Set Angle");
+			setAngle(m, Conf.autoThresh, 0.3);
+		}
 		snoop(); // Send data to the SmartDashboard
 		if (DriveStation.b_getKey(button_oclaw)) { // Overrides the claws
 													// current state. Will
