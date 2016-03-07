@@ -2,13 +2,14 @@ package org.usfirst.frc.team5572.robot;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static org.usfirst.frc.team5572.robot.Conf.*;
 
 public class DriveTrain {
 
 	private static final int[] leftCIMs = { 3, 5 }; // PWM Channels
-	private static final int[] rightCIMs = { 0, 1 }; // PWM Channels
+	private static final int[] rightCIMs = { 2, 1 }; // PWM Channels
 
 	private static SpeedController[] left = new SpeedController[leftCIMs.length];
 	private static SpeedController[] right = new SpeedController[rightCIMs.length];
@@ -30,7 +31,8 @@ public class DriveTrain {
 	}
 
 	public static void feedData() {
-
+		SmartDashboard.putNumber("Left Encoders", Snoopr.getLeftEncoderRaw());
+		SmartDashboard.putNumber("Right Encoders", Snoopr.getRightEncoderRaw());
 	}
 
 	private static void drive() {
@@ -87,18 +89,15 @@ public class DriveTrain {
 		currdist = -1;
 	}
 
-	public static boolean driveStraight(double speed, int dist) {
-		if (currdist == -1) {
-			currdist = dist;
-			Snoopr.resetEncoders();
+	public static boolean driveStraight(double speed, double dist) {
+		if (Snoopr.getRightEncoderRaw() <= dist) {
+			double delta = Snoopr.getRightEncoderRaw() - Snoopr.getLeftEncoderRaw();
+			double modDelta = delta / 100d;
+			double speed2 = clamp(0.002*dist - Snoopr.getRightEncoderRaw(), .3, speed);
+			DriveTrain.drivelr(-speed2, (-speed2 + modDelta));
+			return false;
 		}
-
-		double l = Snoopr.getLeftEncoderDistance();
-		double r = Snoopr.getLeftEncoderDistance();
-		if ((l + r) / 2 >= currdist)
-			return true;
-		drive(speed, (l - r) / straight_line_divisor);
-		return false;
+		return true;
 	}
 
 	private static double max(double a, double b) {
@@ -108,7 +107,7 @@ public class DriveTrain {
 	private static int signum(double a) {
 		return a == 0 ? 0 : (a > 0 ? 1 : -1);
 	}
-	
+
 	public static boolean setGlobalAngle(double angle, double thresh) {
 		double curr = Snoopr.getAngle();
 		if (Math.abs(angle - curr) <= thresh)

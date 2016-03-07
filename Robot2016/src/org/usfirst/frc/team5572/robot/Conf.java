@@ -19,7 +19,7 @@ public class Conf {
 	 * Power coefficient while the launcher is lowering its angle. Should not
 	 * exceed 1
 	 */
-	public static final double cannon_motor_coef = 2d/3d;
+	public static final double cannon_motor_coef = 2d / 3d;
 
 	/** Button that turns on or off the automatic cocking mechanism */
 	public static final int button_cancel = 7;
@@ -40,7 +40,7 @@ public class Conf {
 	 */
 	public static final int grabber_reverse = grabber_forward + 4, pull_reverse = pull_forward + 4,
 			lock_reverse = lock_forward + 4, plat_reverse = plat_forward + 4;
-	
+
 	public static final int lift_forward = 8;
 	public static final int lift_reverse = 9;
 
@@ -57,17 +57,17 @@ public class Conf {
 
 	public static final double a1 = 63;
 	public static final double a0 = -44;
-	
+
 	public static final double v2 = 0;
 	public static final double v3 = 0;
-	
+
 	public static final double p2 = 0;
 	public static final double p3 = 0;
 
 	/** Speed of the intake wheels */
 	public static final double rollSpeed = 1;
 
-	public static final int launcherWait = 25;
+	public static final int launcherWait = 12;
 	public static final int resetWait = 50;
 
 	public static final int potentiometer_avg_amnt = 10;
@@ -77,11 +77,15 @@ public class Conf {
 	public static final double analog_play = 0.01;
 
 	public static final int tegra_channels[] = { 0, 7, 8 }; // {analog,
-																// in,
-																// request }
-	
-	public static final double autoThresh = 0.5;
-	
+															// in,
+															// request }
+
+	public static final double autoThresh = 1.25;
+
 	public static final int milliSecondsWaitJetson = 200;
-	
+
+	public static final double clamp(double a, double min, double max) {
+		return a < min ? min : (a > max ? max : a);
+	}
+
 }

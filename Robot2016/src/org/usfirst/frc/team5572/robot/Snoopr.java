@@ -3,6 +3,7 @@ package org.usfirst.frc.team5572.robot;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
@@ -27,8 +28,8 @@ public class Snoopr {
 	public static void init() {
 		ahrs = new AHRS(SPI.Port.kMXP);
 		ahrs.reset();
-		left = new Encoder(5, 6);
-		right = new Encoder(3, 4);
+		left = new Encoder(5, 6, true, EncodingType.k4X);
+		right = new Encoder(3, 4, true, EncodingType.k4X);
 		poten = new AnalogInput(2);
 		pressureSwitch = new AnalogInput(1);
 		grabberDio = new DigitalInput(2);
@@ -69,11 +70,11 @@ public class Snoopr {
 		ahrs.zeroYaw();
 	}
 
-	public static double getLeftEncoderDistance() {
+	public static double getLeftEncoderRaw() {
 		return left.get();
 	}
 
-	public static double getRightEncoderDistance() {
+	public static double getRightEncoderRaw() {
 		return right.get();
 	}
 

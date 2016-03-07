@@ -28,7 +28,7 @@ public class Robot extends SampleRobot {
 		Snoopr.init();
 		Lift.init();
 		Launcher.init();
-
+		Jetson.init();
 	}
 
 	StateMachine currentStateMachine = null;
@@ -44,21 +44,53 @@ public class Robot extends SampleRobot {
 	 * if-else structure below with additional strings. If using the
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
+
+	private static enum AutoMode {
+		SpyZone, Cheval, RockWall;
+	}
+
+	private static AutoMode s = AutoMode.SpyZone;
+
 	public void autonomous() {
 		// DriveTrain.drivelr(.35, .35);
-		Launcher.init();
+		Snoopr.resetEncoders();
 		Launcher.begin();
 		DriveTrain.drivelr(0, 0);
-		Launcher.openClaw();
-		while (!Launcher.setAngle(44, Conf.autoThresh, .3))
-			if (!isEnabled() || !isAutonomous())
-				break;
-		Launcher.changeAngle(0);
-		while (!Launcher.autofire())
-			if (!isEnabled() || !isAutonomous())
-				break;
-		if (isAutonomous() && isEnabled())
-			Launcher.fire();
+		Launcher.closeClaw();
+		if (s.equals(AutoMode.SpyZone)) {
+			while (Snoopr.getPressureSwitchV() < 1.78)
+				;
+			while (!Launcher.setAngle(37, Conf.autoThresh, .24))
+				if (!isEnabled() || !isAutonomous())
+					break;
+			Launcher.changeAngle(0);
+			System.out.println("done");
+
+			while (!Launcher.autofire())
+				if (!isEnabled() || !isAutonomous())
+					break;
+			Launcher.openClaw();
+			Timer.delay(3);
+			if (isAutonomous() && isEnabled())
+				Launcher.fire();
+		} else if (s.equals(AutoMode.Cheval)) {
+			double delta = 0;
+			while (!DriveTrain.driveStraight(0.5, 200)) {
+				DriveTrain.feedData();
+				if (!isAutonomous() || !isEnabled()) {
+					break;
+				}
+			}
+			System.out.println(delta);
+			DriveTrain.drivelr(0, 0);
+			while (true) {
+				DriveTrain.feedData();
+				if (!isAutonomous() || !isEnabled()) {
+					System.out.println(delta);
+					break;
+				}
+			}
+		}
 		/*
 		 * currentStateMachine = auto1_State_01;
 		 * currentStateMachine.startMachine(); while (isAutonomous() &&
@@ -88,12 +120,17 @@ public class Robot extends SampleRobot {
 		Timer timer = new Timer();
 		timer.start();
 		Launcher.begin();
+		if (test)
+			Launcher.openClaw();
 		DriveStation.beginCamera();
 		while (((isOperatorControl() && !test) || (isTest() && test)) && isEnabled()) {
 			timer.start();
 			DriveStation.updateCamera();
 			DriveTrain.teleop();
 			Lift.update(test);
+			if (DriveStation.a_getKey(-1)) {
+				Jetson.autoTurn();
+			}
 			try {
 				Launcher.update();
 			} catch (Exception e) {

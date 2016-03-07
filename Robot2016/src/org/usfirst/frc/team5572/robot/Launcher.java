@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Timer;
 
 import static org.usfirst.frc.team5572.robot.Conf.*;
 
@@ -41,13 +42,13 @@ public class Launcher {
 		double curr = Snoopr.getAngle();
 		if (Math.abs(curr - angle) <= threshold) {
 			accum++;
-			if (accum > 100)
+			if (accum > 300)
 				return true;
 			return false;
 		}
 		accum = 0;
 		System.out.println(curr + ":" + limit((angle - curr) / 3));
-		changeAngle(limit((angle - curr) / 3) > 0 ? speed : -speed);
+		changeAngle(Math.abs(limit((angle - curr) / 3)) * (limit((angle - curr) / 3) > 0 ? speed : -speed));
 		return false;
 	}
 
@@ -66,6 +67,7 @@ public class Launcher {
 			return false;
 		}
 		boolean dios[] = Snoopr.getDio(); // Cock, lock, grab
+		snoop();
 		if (dios[1]) { // Checks if the lock is in place
 			cockingSystem.set(Value.kForward); // Retracts the cocking
 												// pistons
@@ -76,9 +78,11 @@ public class Launcher {
 												// pistons
 			return false;
 		}
+		roll.set(-rollSpeed);
 		lock.set(Value.kReverse); // Lock the lock
-
-		if (dios[0] && dios[1] && !dios[2]) {
+		
+		if (dios[0] && dios[1]) {
+			roll.set(0);
 			return true;
 		} else {
 			return false;
@@ -173,14 +177,13 @@ public class Launcher {
 		IntakeSystem.set(Value.kReverse); // close grabber
 		cockingSystem.set(Value.kForward); // uncock
 		run = false;
-		SmartDashboard.putNumber("Set Angle", 0);
+		SmartDashboard.putNumber("Set Angle", 40);
 	}
 
 	public static void update() {
 		changeAngle(DriveStation.b_y() * DriveStation.b_getThrottle());
 		if(DriveStation.b_getKey(2)){
-			double m = SmartDashboard.getNumber("Set Angle");
-			setAngle(m, Conf.autoThresh, 0.3);
+			setAngle(SmartDashboard.getNumber("Set Angle"), 1, .24);
 		}
 		snoop(); // Send data to the SmartDashboard
 		if (DriveStation.b_getKey(button_oclaw)) { // Overrides the claws

@@ -1,35 +1,36 @@
 package org.usfirst.frc.team5572.robot;
 
-import edu.wpi.first.wpilibj.PWM;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.AnalogInput;
 
 public class Jetson {
 
-	private static final int lowest = 6;
-
-	private static PWM pwm[] = new PWM[5];
+	private static AnalogInput aix, aid;
 
 	public static void init() {
-		for (int i = lowest; i <= lowest + 5; i++) {
-			pwm[i - lowest] = new PWM(i);
-		}
+		aix = new AnalogInput(0);
+		aid = new AnalogInput(3);
 	}
 
-	private static int distance, x, y, yaw, pitch;
+	private static double distance, x;
 
 	// Order: Yaw, Pitch, X, Y, Distance
 	public static void update() {
-		yaw = pwm[0].getRaw() - 128;
-		pitch = pwm[1].getRaw() - 128;
-		x = pwm[2].getRaw();
-		y = pwm[3].getRaw();
-		distance = pwm[4].getRaw();
+		distance = getScaled(aid.getAverageVoltage());
+		x = getScaled(aix.getAverageVoltage()) - 128;
+	}
 
-		SmartDashboard.putNumber("tegra_yaw", yaw);
-		SmartDashboard.putNumber("tegra_pitch", pitch);
-		SmartDashboard.putNumber("tegra_x", x);
-		SmartDashboard.putNumber("tegra_y", y);
-		SmartDashboard.putNumber("tegra_distance", distance);
+	public static void autoTurn() {
+		if (Math.abs(x - 128) < 1)
+			return;
+		DriveTrain.drive(0, Conf.limit(x / 16));
+	}
+
+	public static double getDistance() {
+		return distance;
+	}
+
+	private static double getScaled(double x) {
+		return (-2.473529652 * x * x + 103.2808743 * x - 13.4680382);
 	}
 
 }
