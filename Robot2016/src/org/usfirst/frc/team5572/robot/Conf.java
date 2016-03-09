@@ -52,8 +52,8 @@ public class Conf {
 	/** Where the Y is the aim of the robot for the camera **/
 	public static final int yAim = 255;
 
-	public static final double v1 = 4.895;
-	public static final double v0 = 2.96;
+	public static final double v1 = 4.894;
+	public static final double v0 = 2.947;
 
 	public static final double a1 = 63;
 	public static final double a0 = -44;
