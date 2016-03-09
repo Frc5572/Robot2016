@@ -90,6 +90,11 @@ public class Robot extends SampleRobot {
 					break;
 				}
 			}
+		} else if (s.equals(AutoMode.RockWall)) {
+			while (Snoopr.getRightEncoderRaw() < 1600) {
+				DriveTrain.drivelr(.66, .66);
+			}
+			DriveTrain.drivelr(0, 0);
 		}
 		/*
 		 * currentStateMachine = auto1_State_01;

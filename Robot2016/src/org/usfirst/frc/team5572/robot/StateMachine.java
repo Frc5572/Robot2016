@@ -5,6 +5,7 @@ public abstract class StateMachine {
 	boolean isRunning = false;
 	boolean isDone = false;
 	
+	@SuppressWarnings("unused")
 	private StateMachine[] machines = null;
 	
 	StateMachine nextState = null;

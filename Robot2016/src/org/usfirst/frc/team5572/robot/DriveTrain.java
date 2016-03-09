@@ -14,8 +14,6 @@ public class DriveTrain {
 	private static SpeedController[] left = new SpeedController[leftCIMs.length];
 	private static SpeedController[] right = new SpeedController[rightCIMs.length];
 
-	private static int currdist = -1;
-
 	public static void init() {
 		for (int i = 0; i < leftCIMs.length; i++) {
 			left[i] = new VictorSP(leftCIMs[i]);
@@ -86,7 +84,7 @@ public class DriveTrain {
 	}
 
 	public static void driveStraightReset() {
-		currdist = -1;
+		Snoopr.resetEncoders();
 	}
 
 	public static boolean driveStraight(double speed, double dist) {
