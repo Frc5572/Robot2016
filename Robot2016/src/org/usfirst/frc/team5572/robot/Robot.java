@@ -49,7 +49,7 @@ public class Robot extends SampleRobot {
 		SpyZone, Cheval, RockWall;
 	}
 
-	private static AutoMode s = AutoMode.SpyZone;
+	private static AutoMode s = AutoMode.RockWall;
 
 	public void autonomous() {
 		// DriveTrain.drivelr(.35, .35);
@@ -91,11 +91,19 @@ public class Robot extends SampleRobot {
 				}
 			}
 		} else if (s.equals(AutoMode.RockWall)) {
-			while (Snoopr.getRightEncoderRaw() < 1600) {
-				DriveTrain.drivelr(.66, .66);
+
+			while (Snoopr.getRightEncoderRaw() < 1000) {
+				double delta = Snoopr.getRightEncoderRaw() - Snoopr.getLeftEncoderRaw();
+				double deltaProportional = delta/100.0;
+				
+				
+				DriveTrain.feedData();
+				DriveTrain.drivelr(-.45, -.45+deltaProportional);
 			}
 			DriveTrain.drivelr(0, 0);
+			DriveTrain.feedData();
 		}
+		DriveTrain.feedData();
 		/*
 		 * currentStateMachine = auto1_State_01;
 		 * currentStateMachine.startMachine(); while (isAutonomous() &&
