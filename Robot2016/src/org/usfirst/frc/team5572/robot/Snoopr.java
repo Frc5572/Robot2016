@@ -37,7 +37,7 @@ public class Snoopr {
 	}
 
 	public static double getAngle() {
-		double m = a * getV() + k;
+		double m = def_poten_a * getV() + def_poten_k;
 		while (m > 180)
 			m -= 360;
 		while (m < -180)
@@ -77,7 +77,7 @@ public class Snoopr {
 	}
 
 	public static double getPressure() {
-		return getPressureSwitchV() * pa + pk;
+		return getPressureSwitchV() * def_pressure_a + def_pressure_k;
 	}
 
 }

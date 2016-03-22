@@ -38,12 +38,4 @@ public class Configuration {
 	public static final int def_pressure_a = 0;
 	public static final int def_pressure_k = 0;
 
-	public static final double a = 0; // (a1 - a0) / (v1 - v0); // Voltage
-	// coefficient for
-	// potentiometer
-	public static final double k = 0; // a1 - a * v1; // Voltage constant for
-	// potentiometer
-	public static final double pa = 0; // (p3 - p2) / (v3 - v2);
-	public static final double pk = 0; // p3 - pa * v3;
-
 }
