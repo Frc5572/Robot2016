@@ -1,4 +1,6 @@
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.alamo;
+
+import static org.usfirst.frc.team5572.alamo.Conf.*;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -8,14 +10,20 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 
-import static org.usfirst.frc.team5572.robot.Configuration.*;
-
 public class Snoopr {
 
 	private static AHRS ahrs; // NAV-X
 	private static Encoder left, right;
 	private static AnalogInput poten, pressureSwitch; // Cannon Potentiometer
-	private static DigitalInput liftBottom, liftTop;
+	private static DigitalInput cockDio, lockDio, grabberDio, liftBottom, liftTop; // Digital
+																					// inputs
+	private static final double a = (a1 - a0) / (v1 - v0); // Voltage
+															// coefficient for
+															// potentiometer
+	private static final double k = a1 - a * v1; // Voltage constant for
+													// potentiometer
+	private static final double pa = (p3 - p2) / (v3 - v2);
+	private static final double pk = p3 - pa * v3;
 
 	public static void init() {
 		ahrs = new AHRS(SPI.Port.kMXP);
@@ -24,6 +32,9 @@ public class Snoopr {
 		right = new Encoder(3, 4, true, EncodingType.k4X);
 		poten = new AnalogInput(2);
 		pressureSwitch = new AnalogInput(1);
+		grabberDio = new DigitalInput(2);
+		cockDio = new DigitalInput(0);
+		lockDio = new DigitalInput(1);
 		liftBottom = new DigitalInput(7);
 		liftTop = new DigitalInput(8);
 	}
@@ -33,7 +44,7 @@ public class Snoopr {
 	}
 
 	public static boolean[] getDio() {
-		return new boolean[] { false, false, false, liftBottom.get(), liftTop.get() };
+		return new boolean[] { !cockDio.get(), !lockDio.get(), grabberDio.get(), liftBottom.get(), liftTop.get() };
 	}
 
 	public static double getAngle() {

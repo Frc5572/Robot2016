@@ -1,6 +1,9 @@
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.alamo;
 
-import static org.usfirst.frc.team5572.robot.Conf.*;
+import static org.usfirst.frc.team5572.alamo.Conf.*;
+
+import org.usfirst.frc.team5572.alamo.DriveStation;
+import org.usfirst.frc.team5572.alamo.Snoopr;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -14,7 +17,7 @@ public class Lift {
 
 	public static void init() {
 		platform = new DoubleSolenoid(12, plat_forward, plat_reverse);
-		sc = new VictorSP(4);
+		sc = new VictorSP(0);
 		platform.set(Value.kForward);
 	}
 
@@ -30,11 +33,10 @@ public class Lift {
 			cancelPressed = false;
 		}
 		if (DriveStation.a_getKey(10)) {
-			sc.set(0.8);
-		} else if ((DriveStation.a_getKey(9) && Snoopr.getDio()[4])) {
 			sc.set(-.8);
+		} else if ((DriveStation.a_getKey(9) && Snoopr.getDio()[4])) {
+			sc.set(0.8);
 		} else {
-			
 			sc.set(0);
 		}
 		if (!Snoopr.getDio()[3] && !test) {

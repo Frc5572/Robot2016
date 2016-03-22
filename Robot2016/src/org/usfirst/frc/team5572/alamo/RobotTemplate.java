@@ -1,5 +1,7 @@
 
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.alamo;
+
+import org.usfirst.frc.team5572.alamo.StateMachine;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;

@@ -1,12 +1,10 @@
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.alamo;
 
-import static org.usfirst.frc.team5572.robot.Configuration.*;
+import static org.usfirst.frc.team5572.alamo.Conf.*;
 
-import static org.usfirst.frc.team5572.robot.Utils.*;
-
-import org.usfirst.frc.team5572.robot.DriveStation;
-import org.usfirst.frc.team5572.robot.DriveTrain;
-import org.usfirst.frc.team5572.robot.Snoopr;
+import org.usfirst.frc.team5572.alamo.DriveStation;
+import org.usfirst.frc.team5572.alamo.DriveTrain;
+import org.usfirst.frc.team5572.alamo.Snoopr;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -14,8 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain {
 
-	private static final int[] leftCIMs = { pwm_wheel_bl, pwm_wheel_fl }; // PWM Channels
-	private static final int[] rightCIMs = { pwm_wheel_br, pwm_wheel_fr }; // PWM Channels
+	private static final int[] leftCIMs = { 3, 5 }; // PWM Channels
+	private static final int[] rightCIMs = { 2, 4 }; // PWM Channels
 
 	private static SpeedController[] left = new SpeedController[leftCIMs.length];
 	private static SpeedController[] right = new SpeedController[rightCIMs.length];
@@ -102,6 +100,14 @@ public class DriveTrain {
 			return false;
 		}
 		return true;
+	}
+
+	private static double max(double a, double b) {
+		return a > b ? a : b;
+	}
+
+	private static int signum(double a) {
+		return a == 0 ? 0 : (a > 0 ? 1 : -1);
 	}
 
 	public static boolean setGlobalAngle(double angle, double thresh) {

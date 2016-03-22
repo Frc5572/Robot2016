@@ -1,4 +1,4 @@
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.alamo;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

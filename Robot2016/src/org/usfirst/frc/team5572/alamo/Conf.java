@@ -1,4 +1,4 @@
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.alamo;
 
 public class Conf {
 
@@ -19,7 +19,7 @@ public class Conf {
 	 * Power coefficient while the launcher is lowering its angle. Should not
 	 * exceed 1
 	 */
-	public static final double cannon_motor_coef = 2d / 3d;
+	public static final double cannon_motor_coef = 2d / 5d;
 
 	/** Button that turns on or off the automatic cocking mechanism */
 	public static final int button_cancel = 7;
@@ -52,8 +52,8 @@ public class Conf {
 	/** Where the Y is the aim of the robot for the camera **/
 	public static final int yAim = 255;
 
-	public static final double v1 = 4.894;
-	public static final double v0 = 2.947;
+	public static final double v1 = 1.527;
+	public static final double v0 = 0.007;
 
 	public static final double a1 = 63;
 	public static final double a0 = -44;
@@ -63,11 +63,13 @@ public class Conf {
 
 	public static final double p2 = 0;
 	public static final double p3 = 0;
+	
+	public static final double pressure = 2.3;
 
 	/** Speed of the intake wheels */
 	public static final double rollSpeed = 1;
 
-	public static final int launcherWait = 12;
+	public static final int launcherWait = 15;
 	public static final int resetWait = 50;
 
 	public static final int potentiometer_avg_amnt = 10;
@@ -83,6 +85,10 @@ public class Conf {
 	public static final double autoThresh = 1.25;
 
 	public static final int milliSecondsWaitJetson = 200;
+	
+	public static final double defAngle = 36;
+	
+	public static final int defCamQual = 50;
 
 	public static final double clamp(double a, double min, double max) {
 		return a < min ? min : (a > max ? max : a);

@@ -1,11 +1,20 @@
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.alamo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.usfirst.frc.team5572.alamo.Conf;
 
 import com.ni.vision.NIVision;
+import com.ni.vision.NIVision.DrawMode;
 import com.ni.vision.NIVision.Image;
+import com.ni.vision.NIVision.Rect;
+import com.ni.vision.NIVision.ShapeMode;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 public class DriveStation {
 
@@ -17,6 +26,9 @@ public class DriveStation {
 
 	private static Joystick stick0;
 	private static Joystick stick1;
+
+	private static List<Rect> shootingSpots = new ArrayList<Rect>();
+	private static USBCamera usb;
 
 	public static void init() {
 		stick0 = new Joystick(joystick0);
@@ -68,7 +80,7 @@ public class DriveStation {
 	public static void beginCamera() {
 		try {
 			NIVision.IMAQdxStartAcquisition(session);
-			CameraServer.getInstance().setQuality(Configuration.def_camera_quality);
+			CameraServer.getInstance().setQuality(Conf.defCamQual);
 		} catch (Exception e) {
 		}
 	}
@@ -80,9 +92,24 @@ public class DriveStation {
 		}
 	}
 
+	private static int tb = 0, lr = 0;
+
 	public static void updateCamera() {
+		if (a_getKey(4))
+			lr--;
+		if (a_getKey(5))
+			lr++;
+		if (a_getKey(3))
+			tb--;
+		if (a_getKey(2))
+			tb++;
 		try {
 			NIVision.IMAQdxGrab(session, frame, 1);
+			for (Rect r : shootingSpots) {
+				NIVision.imaqDrawShapeOnImage(frame, frame, r, DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 1);
+			}
+			NIVision.Rect rect = new Rect(lr, tb, 10, 10);
+			NIVision.imaqDrawShapeOnImage(frame, frame, rect, DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 1);
 			CameraServer.getInstance().setImage(frame);
 			if (a_getKey(7)) {
 				CameraServer.getInstance().setQuality(CameraServer.getInstance().getQuality() - 1);

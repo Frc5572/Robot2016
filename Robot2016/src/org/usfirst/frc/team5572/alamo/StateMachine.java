@@ -1,4 +1,6 @@
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.alamo;
+
+import org.usfirst.frc.team5572.alamo.StateMachine;
 
 public abstract class StateMachine {
 	
