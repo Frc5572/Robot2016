@@ -5,6 +5,7 @@ import com.ni.vision.NIVision.Image;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick.AxisType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveStation {
@@ -14,13 +15,16 @@ public class DriveStation {
 
 	private static final int joystick0 = 0;
 	private static final int joystick1 = 1;
+	private static final int joystick2 = 2;
 
 	private static Joystick stick0;
 	private static Joystick stick1;
+	private static Joystick stick2;
 
 	public static void init() {
 		stick0 = new Joystick(joystick0);
 		stick1 = new Joystick(joystick1);
+		stick2 = new Joystick(joystick2);
 		try {
 			frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
 			session = NIVision.IMAQdxOpenCamera("cam0", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
@@ -63,6 +67,18 @@ public class DriveStation {
 
 	public static double b_getThrottle() {
 		return (-stick1.getThrottle() + 1) / 2;
+	}
+	
+	public static double getKnob(int axis){
+		return stick2.getRawAxis(axis);
+	}
+	
+	public static boolean getSwitch(int a){
+		return stick2.getRawButton(a);
+	}
+	
+	public static void out(int a, boolean b){
+		stick2.setOutput(a, b);
 	}
 
 	public static void beginCamera() {

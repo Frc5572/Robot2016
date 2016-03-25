@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain {
 
-	private static final int[] leftCIMs = { pwm_wheel_bl, pwm_wheel_fl }; // PWM Channels
-	private static final int[] rightCIMs = { pwm_wheel_br, pwm_wheel_fr }; // PWM Channels
+	private static final int[] leftCIMs = { pwm_wheel_bl, pwm_wheel_fl }; // PWM
+																			// Channels
+	private static final int[] rightCIMs = { pwm_wheel_br, pwm_wheel_fr }; // PWM
+																			// Channels
 
 	private static SpeedController[] left = new SpeedController[leftCIMs.length];
 	private static SpeedController[] right = new SpeedController[rightCIMs.length];
@@ -37,6 +39,7 @@ public class DriveTrain {
 	public static void feedData() {
 		SmartDashboard.putNumber("Left Encoders", Snoopr.getLeftEncoderRaw());
 		SmartDashboard.putNumber("Right Encoders", Snoopr.getRightEncoderRaw());
+		SmartDashboard.putNumber("Yaw", Snoopr.getTotalYaw());
 	}
 
 	private static void drive() {
@@ -93,22 +96,40 @@ public class DriveTrain {
 		Snoopr.resetEncoders();
 	}
 
-	public static boolean driveStraight(double speed, double dist) {
-		if (Snoopr.getRightEncoderRaw() <= dist) {
+	public static boolean driveStraight(double speed, double thresh, double dist_in) {
+		double dist = dist_in * 11.0107526882;
+		if (Snoopr.getRightEncoderRaw() <= dist - thresh) {
 			double delta = Snoopr.getRightEncoderRaw() - Snoopr.getLeftEncoderRaw();
 			double modDelta = delta / 100d;
-			double speed2 = clamp(0.002*dist - Snoopr.getRightEncoderRaw(), .3, speed);
+			double speed2 = clamp(0.002 * (dist - Snoopr.getRightEncoderRaw()), .2, speed);
 			DriveTrain.drivelr(-speed2, (-speed2 + modDelta));
 			return false;
 		}
 		return true;
 	}
 
+	public static void resetGlobalAngle() {
+		Snoopr.zero();
+	}
+
+	private static int accum = 0;
+
 	public static boolean setGlobalAngle(double angle, double thresh) {
-		double curr = Snoopr.getAngle();
-		if (Math.abs(angle - curr) <= thresh)
-			return true;
-		turn(angle - curr);
+		double curr = Snoopr.getTotalYaw();
+		while (curr > 180)
+			curr -= 360;
+		while (curr < -180)
+			curr += 360;
+		if (Math.abs(angle - curr) <= thresh) {
+			System.out.print(angle - curr + "  ");
+			accum++;
+			if (accum > 300)
+				return true;
+			turn(0);
+		} else {
+			accum = 0;
+			turn(angle - curr);
+		}
 		return false;
 	}
 
@@ -117,6 +138,8 @@ public class DriveTrain {
 			angle -= 360;
 		while (angle < -180)
 			angle += 360;
-		drive(0, angle / 180);
+		double val = Utils.clampMotor(angle / 90 + 0.05);
+		System.out.println(val);
+		drivelr(-val, val);
 	}
 }
