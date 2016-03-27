@@ -27,9 +27,10 @@ public class DriveStation {
 		stick2 = new Joystick(joystick2);
 		try {
 			frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-			session = NIVision.IMAQdxOpenCamera("cam0", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
+			session = NIVision.IMAQdxOpenCamera("cam1", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
 			NIVision.IMAQdxConfigureGrab(session);
 		} catch (Exception e) {
+		    System.out.println("No Camera");
 		}
 	}
 

@@ -22,7 +22,7 @@ public class Snoopr {
 		ahrs.reset();
 		left = new Encoder(5, 6, true, EncodingType.k4X);
 		right = new Encoder(3, 4, true, EncodingType.k4X);
-		poten = new AnalogInput(2);
+		poten = new AnalogInput(an_potentiometer);
 		pressureSwitch = new AnalogInput(1);
 		liftBottom = new DigitalInput(7);
 		liftTop = new DigitalInput(8);

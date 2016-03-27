@@ -12,6 +12,7 @@ public class Robot extends SampleRobot {
 		DriveStation.init();
 		Launcher.init();
 		Snoopr.init();
+		Arduino.init();
 	}
 
 	@Override
@@ -30,11 +31,17 @@ public class Robot extends SampleRobot {
 	@Override
 	public void operatorControl() {
 		DriveTrain.driveStraightReset();
+		DriveStation.beginCamera();
+		Arduino.start();
 		while (isOperatorControl() && isEnabled()) {
 			DriveTrain.teleop();
 			Launcher.update();
+			DriveStation.updateCamera();
+			Arduino.snoop();
 			Timer.delay(0.005);
 		}
+		Arduino.end();
+		DriveStation.endCamera();
 	}
 
 	@Override

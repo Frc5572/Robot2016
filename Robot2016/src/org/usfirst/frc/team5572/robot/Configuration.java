@@ -4,9 +4,9 @@ package org.usfirst.frc.team5572.robot;
 public class Configuration {
     public static final short  an_potentiometer    = 0;
     public static final short  an_pressure         = 0;
-    public static final short  an_angle_in         = 0;
-    public static final short  an_angle_out        = 0;
-    public static final short  an_power_in         = 0;
+    public static final short  an_angle_in         = 2;
+    public static final short  an_angle_out        = 9;
+    public static final short  an_power_in         = 3;
     public static final short  dio_enc_r_a         = 3;
     public static final short  dio_enc_r_b         = 4;
     public static final short  dio_enc_l_a         = 5;
@@ -16,7 +16,7 @@ public class Configuration {
     public static final short  dio_cannon_top      = 0;
     public static final short  dio_cannon_low      = 0;
     public static final short  dio_angle_run       = 0;
-    public static final short  dio_angle_found     = 0;
+    public static final short  dio_angle_found     = 1;
     public static final short  sol_primer_f        = 0;
     public static final short  sol_primer_r        = 1;
     public static final short  sol_lift_primer_f   = 0;
@@ -44,7 +44,7 @@ public class Configuration {
     public static final int    def_poten_k         = 0;
     public static final int    def_pressure_a      = 0;
     public static final int    def_pressure_k      = 0;
-    public static final double def_angle_max       = 0;
-    public static final double def_angle_min       = 0;
+    public static final double def_angle_max       = 106.87;
+    public static final double def_angle_min       = -18.8;
     public static final int    def_sampler_size    = 11;
 }

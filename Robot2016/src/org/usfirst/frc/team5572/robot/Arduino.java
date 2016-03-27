@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static org.usfirst.frc.team5572.robot.Configuration.*;
 
@@ -54,6 +55,11 @@ public class Arduino {
         }
         double angle = Math.round(4 * map(mode(dataAngle), 2.673, 4.477, def_angle_min, def_angle_max)) / 4;
         return angle;
+    }
+    
+    public static void snoop(){
+        SmartDashboard.putNumber("angle", getAngle());
+        SmartDashboard.putNumber("motor", getMotor());
     }
     
     public static double getMotor( ) {
