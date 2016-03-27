@@ -90,5 +90,4 @@ public class Snoopr {
 	public static double getPressure() {
 		return getPressureSwitchV() * pa + pk;
 	}
-
 }

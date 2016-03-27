@@ -10,6 +10,7 @@ public class Robot extends SampleRobot {
 	protected void robotInit() {
 		DriveTrain.init();
 		DriveStation.init();
+		Launcher.init();
 		Snoopr.init();
 	}
 
@@ -31,6 +32,7 @@ public class Robot extends SampleRobot {
 		DriveTrain.driveStraightReset();
 		while (isOperatorControl() && isEnabled()) {
 			DriveTrain.teleop();
+			Launcher.update();
 			Timer.delay(0.005);
 		}
 	}

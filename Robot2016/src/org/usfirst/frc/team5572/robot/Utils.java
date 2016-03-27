@@ -21,5 +21,26 @@ public class Utils {
 	public static double max(double a, double b) {
 		return a > b ? a : b;
 	}
+	
+	public static double map( double x, double in_min, double in_max, double out_min, double out_max ) {
+        return ( x - in_min ) * ( out_max - out_min ) / ( in_max - in_min ) + out_min;
+    }
+	
+	public static double mode( double[] m ) {
+        int mindex = 0;
+        int count = 0;
+        for ( int i = 0; i < m.length; i++ ) {
+            int altCount = 0;
+            for ( int j = i; j < m.length; j++ ) {
+                if ( m[i] == m[j] )
+                    altCount++;
+            }
+            if ( altCount > count ) {
+                mindex = i;
+                count = altCount;
+            }
+        }
+        return m[mindex];
+    }
 
 }
