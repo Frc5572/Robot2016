@@ -50,6 +50,20 @@ public class newLauncher {
     	intake.set(val);
     }
     public static void fire(){
+    	new Thread(new Runnable(){
+    		public void run(){
+    			primer.set(Value.kForward);
+    	    	intake.set(-1);
+    	    	try {
+					Thread.sleep(250);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    	    	intake.set(0);
+    	    	primer.set(Value.kReverse);
+    		}
+    	});
     	
     }
     public static void setDx(double sx){

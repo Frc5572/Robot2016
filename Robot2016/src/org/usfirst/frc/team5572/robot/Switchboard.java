@@ -52,9 +52,7 @@ public class Switchboard{
 			public void run(){
 				
 				if(Switchboard.getFire()){
-					newLauncher.cock(1);
-					while(getFire()){}
-					newLauncher.cock(-1);
+					newLauncher.fire();
 				}else{
 					newLauncher.cock(0);
 				}
@@ -84,6 +82,6 @@ public class Switchboard{
 				}
 				newLauncher.update();
 			}
-		}).run();;
+		}).run();
 	}
 }
