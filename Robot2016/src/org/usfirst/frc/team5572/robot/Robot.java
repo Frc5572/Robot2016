@@ -10,11 +10,14 @@ public class Robot extends SampleRobot {
 	protected void robotInit() {
 		DriveTrain.init();
 		DriveStation.init();
-		Launcher.init();
+		
 		Snoopr.init();
 		Arduino.init();
+		Launcher.init();
+		//newLauncher.init();
 		//Switchboard.init(1);
 		//Switchboard.init(2);
+		//Switchboard.listen();
 	}
 
 	@Override

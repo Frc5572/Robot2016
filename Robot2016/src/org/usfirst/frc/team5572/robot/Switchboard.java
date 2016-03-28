@@ -1,5 +1,6 @@
 package org.usfirst.frc.team5572.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Switchboard{
@@ -8,8 +9,10 @@ public class Switchboard{
 	public static Joystick joy;
 	private static boolean autoAim=false;
 	private static int manAim;
+	private static DriverStation ds;
 	public static void init(int jo){
 		joy=new Joystick(jo);
+		ds=DriverStation.getInstance();
 	}
 	public static double getAutoAngle(){
 		double ret=0;
@@ -50,37 +53,38 @@ public class Switchboard{
 			private boolean expierimental=false;
 
 			public void run(){
-				
-				if(Switchboard.getFire()){
-					newLauncher.fire();
-				}else{
-					newLauncher.cock(0);
-				}
-				if(Switchboard.getCockButton()){
-					newLauncher.cock(1);
-				}else{
-					newLauncher.cock(0);
-				}
-				if(Switchboard.getOutTakeButton()){
-					newLauncher.roll(1);
-				}else{
-					newLauncher.roll(0);
-				}
-				if(Switchboard.getIntakeButton()){
-					newLauncher.roll(-1);
-				}else{
-					newLauncher.roll(0);
-				}
-				if(expierimental){
-					newLauncher.lift(Switchboard.getManAim());
-				}else{
-					if(Switchboard.getMoveArmButton()){
-						newLauncher.setSpeed(Switchboard.getManAim());
+				while(ds.isEnabled()){
+					if(Switchboard.getFire()){
+						newLauncher.fire();
 					}else{
-						newLauncher.setSpeed(0);
+						newLauncher.cock(0);
 					}
+					if(Switchboard.getCockButton()){
+						newLauncher.cock(1);
+					}else{
+						newLauncher.cock(0);
+					}
+					if(Switchboard.getOutTakeButton()){
+						newLauncher.roll(1);
+					}else{
+						newLauncher.roll(0);
+					}
+					if(Switchboard.getIntakeButton()){
+						newLauncher.roll(-1);
+					}else{
+						newLauncher.roll(0);
+					}
+					if(expierimental){
+						newLauncher.lift(Switchboard.getManAim());
+					}else{
+						if(Switchboard.getMoveArmButton()){
+							newLauncher.setSpeed(Switchboard.getManAim());
+						}else{
+							newLauncher.setSpeed(0);
+						}
+					}
+					newLauncher.update();
 				}
-				newLauncher.update();
 			}
 		}).run();
 	}
