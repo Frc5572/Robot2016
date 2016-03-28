@@ -13,6 +13,8 @@ public class Robot extends SampleRobot {
 		Launcher.init();
 		Snoopr.init();
 		Arduino.init();
+		//Switchboard.init(1);
+		//Switchboard.init(2);
 	}
 
 	@Override
