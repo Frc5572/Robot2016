@@ -28,10 +28,23 @@ public class Arduino {
         ao = new VictorSP(an_angle_out);
         run = new DigitalOutput(dio_angle_run);
         found = new DigitalInput(dio_angle_found);
+        AnalogInput.setGlobalSampleRate(31250);
     }
     
     public static void setAngle( double angle ) {
         ao.set(map(angle, def_angle_min, def_angle_max, -1, 1));
+    }
+    
+    public static boolean angle( SpeedController sc, double angle ) {
+        start();
+        setAngle(angle);
+        if ( isInPlace() ) {
+            end();
+            sc.set(angle < 70 ? -0.09 : angle > 100 ? 0.1 : 0);
+            return true;
+        }
+        sc.set(getMotor());
+        return false;
     }
     
     public static void start( ) {
@@ -57,7 +70,7 @@ public class Arduino {
         return angle;
     }
     
-    public static void snoop(){
+    public static void snoop( ) {
         SmartDashboard.putNumber("angle", getAngle());
         SmartDashboard.putNumber("motor", getMotor());
     }
