@@ -52,8 +52,15 @@ public class newLauncher {
     public static void fire(){
     	new Thread(new Runnable(){
     		public void run(){
-    			primer.set(Value.kForward);
     	    	intake.set(-1);
+    	    	try {
+					Thread.sleep(125);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    	    	primer.set(Value.kForward);
+    	    	
     	    	try {
 					Thread.sleep(250);
 				} catch (InterruptedException e) {

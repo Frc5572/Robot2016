@@ -79,7 +79,7 @@ public class Switchboard{
 					}else{
 						if(Switchboard.getMoveArmButton()){
 							newLauncher.setSpeed(Switchboard.getManAim());
-						}else{
+						}else{  
 							newLauncher.setSpeed(0);
 						}
 					}

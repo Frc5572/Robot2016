@@ -15,7 +15,7 @@ import static org.usfirst.frc.team5572.robot.Configuration.*;
 
 
 
-public class Launcher {
+public class Launcher{
     private static CANTalon        intake;
     private static DoubleSolenoid  primer;
     private static SpeedController angle_actual;
