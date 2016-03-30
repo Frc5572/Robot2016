@@ -3,8 +3,6 @@ package org.usfirst.frc.team5572.alamo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.usfirst.frc.team5572.alamo.Conf;
-
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.DrawMode;
 import com.ni.vision.NIVision.Image;
@@ -14,7 +12,6 @@ import com.ni.vision.NIVision.ShapeMode;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.USBCamera;
 
 public class DriveStation {
 
@@ -28,7 +25,6 @@ public class DriveStation {
 	private static Joystick stick1;
 
 	private static List<Rect> shootingSpots = new ArrayList<Rect>();
-	private static USBCamera usb;
 
 	public static void init() {
 		stick0 = new Joystick(joystick0);

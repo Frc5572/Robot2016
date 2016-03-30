@@ -33,6 +33,9 @@ public class Configuration {
     public static final int     bind_ctr_fire        = -1;
     public static final int     bind_ctr_auto_angle0 = 12;
     public static final int     bind_ctr_auto_angle1 = 11;
+    public static final int     bind_ctr_auto_angle2 = 10;
+    public static final int     bind_ctr_auto_angle3 = 9;
+    public static final int     bind_ctr_auto_angle4 = 8;
     public static final int     bind_drv_up_qual     = 0;
     public static final int     bind_drv_dn_qual     = 0;
     public static final int     bind_drv_lift_prime  = 8;
@@ -50,6 +53,11 @@ public class Configuration {
     public static final double  def_angle_min        = -18.8;
     public static final int     def_sampler_size     = 11;
     public static final boolean def_use_switchboard  = false;
-    public static final double  def_default_angle_0  = 66;
+    public static final double  def_default_angle_0  = 62;
     public static final double  def_default_angle_1  = 77;
+    public static final double  def_default_angle_2  = 30;
+    public static final double  def_default_angle_3  = 77;
+    public static final double  def_default_angle_4  = 77;
+    public static final double  def_auto_spy_fwd     = 87;
+    public static final double  def_auto_spy_turn    = -52.5;
 }

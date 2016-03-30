@@ -1,25 +1,38 @@
 
 package org.usfirst.frc.team5572.robot;
 
+import static org.usfirst.frc.team5572.robot.Configuration.bind_ctr_auto_angle0;
+import static org.usfirst.frc.team5572.robot.Configuration.bind_ctr_auto_angle1;
+import static org.usfirst.frc.team5572.robot.Configuration.bind_ctr_auto_angle2;
+import static org.usfirst.frc.team5572.robot.Configuration.bind_ctr_auto_angle3;
+import static org.usfirst.frc.team5572.robot.Configuration.bind_ctr_auto_angle4;
+import static org.usfirst.frc.team5572.robot.Configuration.bind_ctr_intake;
+import static org.usfirst.frc.team5572.robot.Configuration.bind_ctr_outtake;
+import static org.usfirst.frc.team5572.robot.Configuration.can_wheel_intake;
+import static org.usfirst.frc.team5572.robot.Configuration.def_default_angle_0;
+import static org.usfirst.frc.team5572.robot.Configuration.def_default_angle_1;
+import static org.usfirst.frc.team5572.robot.Configuration.def_default_angle_2;
+import static org.usfirst.frc.team5572.robot.Configuration.def_default_angle_3;
+import static org.usfirst.frc.team5572.robot.Configuration.def_default_angle_4;
+import static org.usfirst.frc.team5572.robot.Configuration.def_sol_mod;
+import static org.usfirst.frc.team5572.robot.Configuration.pwm_wheel_cannon;
+import static org.usfirst.frc.team5572.robot.Configuration.sol_primer_f;
+import static org.usfirst.frc.team5572.robot.Configuration.sol_primer_r;
+
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.PWM;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.PWM.PeriodMultiplier;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-
-import static org.usfirst.frc.team5572.robot.Configuration.*;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
 public class Launcher {
-    private static CANTalon        intake;
-    private static DoubleSolenoid  primer;
-    private static SpeedController angle_actual;
+    static CANTalon        intake;
+    static DoubleSolenoid  primer;
+    static SpeedController angle_actual;
                                    
     public static void init( ) {
         PowerDistributionPanel.setDefaultSolenoidModule(def_sol_mod);
@@ -30,14 +43,14 @@ public class Launcher {
     
     private static Value   rollingIn = Value.kOff;
     private static boolean angle0    = false,
-                                   angle1 = false;
+                                   angle1 = false, angle2 = false, angle3 = false, angle4 = false;
     private static long    wait      = 0;
                                      
     public static void update( ) {
         if ( rollingIn.equals(Value.kForward) ) {
             intake.set(1);
         } else if ( rollingIn.equals(Value.kReverse) ) {
-            intake.set(-1);
+            intake.set(-.808);
         } else {
             intake.set(0);
         }
@@ -47,7 +60,9 @@ public class Launcher {
         for ( int i = 0; i < 11; i++ ) {
             SmartDashboard.putBoolean("Button " + i, DriveStation.getSwitch(i));
         }
-        angle_actual.set(DriveStation.b_getThrottle() * 0.6 * -DriveStation.b_y() - 0.1);
+        angle_actual
+                .set(DriveStation.b_getThrottle() * 0.6 * -DriveStation.b_y() - ( Arduino.getAngle() > 70 ? 0 : .09 ));
+        SmartDashboard.putNumber("StickOut", DriveStation.b_getThrottle() * 0.6 * -DriveStation.b_y());
         if ( DriveStation.b_getKey(-1) && wait < System.nanoTime() ) {
             wait = System.nanoTime() + 1250000000L;
         }
@@ -65,13 +80,34 @@ public class Launcher {
             } else
                 angle1 = true;
         }
+        if ( DriveStation.b_getKey(bind_ctr_auto_angle2) || angle2 ) {
+            if ( Arduino.angle(angle_actual, def_default_angle_2) ) {
+                angle_actual.set(-.2);
+                angle2 = false;
+            } else
+                angle2 = true;
+        }
+        if ( DriveStation.b_getKey(bind_ctr_auto_angle3) || angle3 ) {
+            if ( Arduino.angle(angle_actual, def_default_angle_3) ) {
+                angle_actual.set(-.3);
+                angle3 = false;
+            } else
+                angle3 = true;
+        }
+        if ( DriveStation.b_getKey(bind_ctr_auto_angle4) || angle4 ) {
+            if ( Arduino.angle(angle_actual, def_default_angle_4) ) {
+                angle_actual.set(-.4);
+                angle4 = false;
+            } else
+                angle4 = true;
+        }
         if ( wait > System.nanoTime() ) {
             rollingIn = Value.kForward;
         } else {
             rollingIn = Value.kOff;
             primer.set(Value.kReverse);
         }
-        if ( wait - 1e9 / 2 < System.nanoTime() && wait > System.nanoTime() ) {
+        if ( wait - /* 1e9 / 2 */ 5e8 < System.nanoTime() && wait > System.nanoTime() ) {
             primer.set(Value.kForward);
         }
         SmartDashboard.putNumber("wait", wait);
