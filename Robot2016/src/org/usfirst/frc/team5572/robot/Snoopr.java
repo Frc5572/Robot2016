@@ -14,18 +14,15 @@ public class Snoopr {
 
 	private static AHRS ahrs; // NAV-X
 	private static Encoder left, right;
-	private static AnalogInput poten, pressureSwitch; // Cannon Potentiometer
 	private static DigitalInput liftBottom, liftTop;
 
 	public static void init() {
 		ahrs = new AHRS(SPI.Port.kMXP);
 		ahrs.reset();
-		left = new Encoder(5, 6, true, EncodingType.k4X);
-		right = new Encoder(3, 4, true, EncodingType.k4X);
-		poten = new AnalogInput(an_potentiometer);
-		pressureSwitch = new AnalogInput(1);
-		liftBottom = new DigitalInput(7);
-		liftTop = new DigitalInput(8);
+		left = new Encoder(dio_enc_l_a, dio_enc_l_b, true, EncodingType.k4X);
+		right = new Encoder(dio_enc_r_a, dio_enc_r_b, true, EncodingType.k4X);
+		liftBottom = new DigitalInput(dio_lift_low);
+		liftTop = new DigitalInput(dio_lift_top);
 	}
 
 	public static double getTotalYaw() {
@@ -33,26 +30,8 @@ public class Snoopr {
 	}
 
 	public static boolean[] getDio() {
-		return new boolean[] { false, false, false, liftBottom.get(), liftTop.get() };
-	}
-
-	public static double getAngle() {
-		double m = def_poten_a * getV() + def_poten_k;
-		while (m > 180)
-			m -= 360;
-		while (m < -180)
-			m += 360;
-		return m;
-	}
-
-	public static double getV() {
-		/*
-		 * double m = 0, max = -1, min = -1; for (int i = 0; i <
-		 * potentiometer_avg_amnt; i++) { m += poten.getValue()/819.2; max = max
-		 * == -1 ? m : (max > m ? max : m); min = min == -1 ? m : (min < m ? min
-		 * : m); } m -= max; m -= min;
-		 */
-		return /* m / (potentiometer_avg_amnt - 2) */ poten.getAverageVoltage();
+		return new boolean[] { false, false, false, liftBottom.get(),
+				liftTop.get() };
 	}
 
 	public static void zero() {
@@ -64,20 +43,12 @@ public class Snoopr {
 	}
 
 	public static double getRightEncoderRaw() {
-		return right.get();
+		return right.get() * 1.08;
 	}
 
 	public static void resetEncoders() {
 		right.reset();
 		left.reset();
-	}
-
-	public static double getPressureSwitchV() {
-		return pressureSwitch.getAverageVoltage();
-	}
-
-	public static double getPressure() {
-		return getPressureSwitchV() * def_pressure_a + def_pressure_k;
 	}
 
 }

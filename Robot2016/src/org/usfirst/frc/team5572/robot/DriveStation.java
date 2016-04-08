@@ -38,17 +38,17 @@ public class DriveStation {
             frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
             if ( use2Cam )
                 frame1 = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-            session = NIVision.IMAQdxOpenCamera("cam1", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
+            session = NIVision.IMAQdxOpenCamera("cam0", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
             if ( use2Cam )
-                session1 = NIVision.IMAQdxOpenCamera("cam0",
+                session1 = NIVision.IMAQdxOpenCamera("cam1",
                         NIVision.IMAQdxCameraControlMode.CameraControlModeController);
             NIVision.IMAQdxConfigureGrab(session);
         } catch ( Exception e ) {
             System.out.println("No Camera");
         }
-        SmartDashboard.putNumber("line_x0", 200);
-        SmartDashboard.putNumber("line_x1", 400);
-        SmartDashboard.putNumber("line0_y", 210);
+        SmartDashboard.putNumber("line_x0", 186);
+        SmartDashboard.putNumber("line_x1", 387);
+        SmartDashboard.putNumber("line0_y", 183);
         SmartDashboard.putNumber("line1_y", 30);
         SmartDashboard.putNumber("line2_y", 40);
         SmartDashboard.putNumber("line3_y", 280);
@@ -151,10 +151,10 @@ public class DriveStation {
                     new Rect(( int ) SmartDashboard.getNumber("line3_y"), x0, 4, x1 - x0), DrawMode.PAINT_VALUE,
                     ShapeMode.SHAPE_RECT, 0xffff00);
             CameraServer.getInstance().setImage(frame);
-            if ( a_getKey(7) ) {
+            if ( a_getKey(10) ) {
                 CameraServer.getInstance().setQuality(CameraServer.getInstance().getQuality() - 1);
             }
-            if ( a_getKey(6) ) {
+            if ( a_getKey(11) ) {
                 CameraServer.getInstance().setQuality(CameraServer.getInstance().getQuality() + 1);
             }
         } catch ( Exception e ) {}
