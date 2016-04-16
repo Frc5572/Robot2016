@@ -1,11 +1,16 @@
 
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.hubcity;
 
-import static org.usfirst.frc.team5572.robot.Conf.*;
+import static org.usfirst.frc.team5572.hubcity.Configuration.*;
+
+import org.usfirst.frc.team5572.hubcity.DriveStation;
+import org.usfirst.frc.team5572.hubcity.Snoopr;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 

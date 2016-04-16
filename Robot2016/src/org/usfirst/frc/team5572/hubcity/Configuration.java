@@ -1,4 +1,4 @@
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.hubcity;
 
 public class Configuration {
 	// public static final short an_potentiometer = 0;
@@ -23,7 +23,7 @@ public class Configuration {
 	public static final short pwm_wheel_bl = 5;
 	public static final short pwm_wheel_br = 4;
 	public static final short pwm_wheel_cannon = 0;
-    public static final short pwm_primer = 1;
+    public static final short pwm_primer = 0;
 	public static final int can_wheel_intake = 3;
 	public static final int can_wheel_lift = 1;
 	public static final int bind_ctr_intake = 4;

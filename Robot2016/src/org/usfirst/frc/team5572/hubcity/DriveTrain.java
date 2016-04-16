@@ -1,7 +1,12 @@
-package org.usfirst.frc.team5572.robot;
+package org.usfirst.frc.team5572.hubcity;
 
-import static org.usfirst.frc.team5572.robot.Conf.*;
+import static org.usfirst.frc.team5572.hubcity.Configuration.*;
 import static org.usfirst.frc.team5572.util.NumberUtils.*;
+
+import org.usfirst.frc.team5572.hubcity.DriveStation;
+import org.usfirst.frc.team5572.hubcity.DriveTrain;
+import org.usfirst.frc.team5572.hubcity.Snoopr;
+import org.usfirst.frc.team5572.util.NumberUtils;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -137,7 +142,7 @@ public class DriveTrain {
 			angle -= 360;
 		while (angle < -180)
 			angle += 360;
-		double val = clampMotor(angle / 90 + 0.05);
+		double val = NumberUtils.clampMotor(angle / 90 + 0.05);
 		System.out.println(val);
 		drivelr(-val, val);
 		return val;
