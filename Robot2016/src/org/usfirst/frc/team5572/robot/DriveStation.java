@@ -39,9 +39,9 @@ public class DriveStation {
         } catch ( Exception e ) {
             System.out.println("No Camera");
         }
-        SmartDashboard.putNumber("line_x0", 186);
-        SmartDashboard.putNumber("line_x1", 387);
-        SmartDashboard.putNumber("line0_y", 183);
+        SmartDashboard.putNumber("line_x0", 295);
+        SmartDashboard.putNumber("line_x1", 377);
+        SmartDashboard.putNumber("line0_y", 215);
         SmartDashboard.putNumber("line1_y", 30);
         SmartDashboard.putNumber("line2_y", 40);
         SmartDashboard.putNumber("line3_y", 280);

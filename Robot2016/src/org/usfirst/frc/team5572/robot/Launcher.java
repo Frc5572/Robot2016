@@ -27,7 +27,6 @@ public class Launcher {
     private static boolean auto = false;
     
     public static void update( ) {
-        System.out.println(DriveStation.b_getThrottle() * 0.25 * DriveStation.b_y());
         if ( !m )
             linAct.set(-DriveStation.b_getThrottle() * 0.5 * DriveStation.b_y());
         if ( DriveStation.b_getKey(-1) )
@@ -46,17 +45,23 @@ public class Launcher {
             primer.zero();
             roller.zero();
         }
+        if(DriveStation.b_getKey(11)){
+            Arduino.angle(linAct, 50, .7);
+        }else{
+            Arduino.end();
+        }
+        
     }
     
     private static Time launch = new Time() {
         @Override
         public boolean run( long time ) {
-            if ( time > 2e9 ) {
+            if ( time > 2.5e9 ) {
                 primer.zero();
                 roller.zero();
                 auto = false;
                 return true;
-            } else if ( time > 1e9 ) {
+            } else if ( time > .7e9 ) {
                 primer.forward();
             } else {
                 primer.zero();

@@ -35,29 +35,14 @@ public class Robot extends SampleRobot {
             Launcher.update();
             DriveStation.updateCamera();
             DriveTrain.teleop();
-            TimerSystem.update();
-            //
-            if ( Arduino.isRunning() && 1 != (int)sc.getSelected() ) {
-                Arduino.end();
-            } else if ( !Arduino.isRunning() && 1 == (int)sc.getSelected() ) {
-                Arduino.start();
-            }
-            if ( Arduino.isRunningTegra() && 2 != (int)sc.getSelected() ) {
-                Arduino.endTegra();
-            } else if ( !Arduino.isRunningTegra() && 2 == (int)sc.getSelected() ) {
-                Arduino.startTegra();
-            }
-            Arduino.setAngle(SmartDashboard.getNumber("angle_set"));
             Arduino.snoop();
-            if ( DriveStation.b_getKey(8) ) {
-                Launcher.linAct.set(Arduino.getMotor());
-                Launcher.m = true;
-            } else {
-                Launcher.m = false;
-            }
-            //
+            TimerSystem.update();
             Timer.delay(.005);
         }
         DriveStation.endCamera();
+    }
+    @Override
+    public void test(){
+        
     }
 }

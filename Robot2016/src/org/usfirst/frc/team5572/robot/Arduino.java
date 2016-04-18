@@ -63,15 +63,18 @@ public class Arduino {
         return distance.getVoltage();
     }
     
-    public static boolean angle( SpeedController sc, double angle , double mul) {
+    public static boolean angle( SpeedController sc, double angle, double max) {
         start();
         setAngle(angle);
         if ( isInPlace() ) {
             end();
-            sc.set(mul * (angle < 70 ? -0.09 : angle > 100 ? 0.1 : 0));
             return true;
         }
-        sc.set(getMotor());
+        double d = getMotor();
+        double abs = d > 0 ? d : -d;
+        double sig = d > 0 ? 1 : -1;
+        sc.set(sig * (abs > max ? max : abs));
+        System.out.println(sig * (abs > max ? max : abs));
         return false;
     }
     
@@ -110,14 +113,20 @@ public class Arduino {
         SmartDashboard.putNumber("distance", getDistance());
     }
     
+    private static final double mid = 3.482665777206421;
+    private static final double min = 0.004882812034338713;
+    private static final double max = 4.873046398162842;
+    
     public static double getMotor( ) {
         double[] data = new double[def_sampler_size];
         for ( int i = 0; i < def_sampler_size; i++ ) {
             data[i] = ai.getAverageVoltage();
+            System.out.println("  -" + i + ":" + data[i]);
         }
         double modedata = mode(data);
-        double motorOut = clamp(modedata < 3.4 ? map(modedata, .2, 3.4, -.33, 0)
-                : ( modedata > 3.4 ? map(modedata, 4.553, 3.4, 0.13, 0) : 0 ), -0.5, 0.15);
+        System.out.println("Motor:" + modedata);
+        double motorOut = clamp(modedata < mid ? map(modedata, min, mid, -0.5, 0)
+                : ( modedata > mid ? map(modedata, max, mid, 0.5, 0) : 0 ), -0.5, 0.5);
         return motorOut;
     }
     
