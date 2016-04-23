@@ -19,12 +19,13 @@ public class Arduino {
     private static SpeedController ao;
     private static DigitalOutput   run;
     private static DigitalInput    found;
+    private static DigitalInput    target;
     private static boolean         running;
     private static DigitalOutput   tegraRun;
     private static boolean         tegraRunning;
     private static AnalogInput     tegra;
     private static AnalogInput     distance;
-                                            
+                                   
     public static void init( ) {
         ai = new AnalogInput(an_power_in);
         angle = new AnalogInput(an_angle_in);
@@ -34,6 +35,7 @@ public class Arduino {
         tegraRun = new DigitalOutput(dio_tegra_run);
         tegra = new AnalogInput(an_tegra_in);
         distance = new AnalogInput(an_dist_in);
+        target = new DigitalInput(11);
         AnalogInput.setGlobalSampleRate(31250);
     }
     
@@ -63,7 +65,7 @@ public class Arduino {
         return distance.getVoltage();
     }
     
-    public static boolean angle( SpeedController sc, double angle, double max) {
+    public static boolean angle( SpeedController sc, double angle, double max ) {
         start();
         setAngle(angle);
         if ( isInPlace() ) {
@@ -73,9 +75,32 @@ public class Arduino {
         double d = getMotor();
         double abs = d > 0 ? d : -d;
         double sig = d > 0 ? 1 : -1;
-        sc.set(sig * (abs > max ? max : abs));
-        System.out.println(sig * (abs > max ? max : abs));
+        sc.set(sig * ( abs > max ? max : abs ));
         return false;
+    }
+    
+    public static boolean useTegra( SpeedController cannon, double turnMax, double max ) {
+        System.out.println("useTegra");
+        if ( !isTargetThere() ) {
+            return true;
+        }
+        startTegra();
+        if ( isInPlace()) {
+            endTegra();
+            return true;
+        }
+        double d = -getMotor();
+        double abs = d > 0 ? d : -d;
+        double sig = d > 0 ? 1 : -1;
+        System.out.println(d + " | " + abs + " | " + sig + "|" + mV);
+        double k = sig * ( abs > max ? max : abs );
+        if ( ! ( k > 0 && Arduino.getAngle() >= 65 ) && ! ( k < 0 && Arduino.getAngle() <= -20 ) )
+            cannon.set(k);
+        return false;
+    }
+    
+    public static boolean isTargetThere( ) {
+        return target.get();
     }
     
     public static void start( ) {
@@ -110,23 +135,36 @@ public class Arduino {
         SmartDashboard.putNumber("motor", getMotor());
         SmartDashboard.putBoolean("running", isRunning());
         SmartDashboard.putNumber("tegra", getTegra());
+        SmartDashboard.putBoolean("found", isInPlace());
+        SmartDashboard.putBoolean("tegraRunning", isRunningTegra());
         SmartDashboard.putNumber("distance", getDistance());
+        SmartDashboard.putBoolean("can shoot", isTargetThere());
     }
     
-    private static final double mid = 3.482665777206421;
+    private static final double mid = 2.484130620956421;
     private static final double min = 0.004882812034338713;
     private static final double max = 4.873046398162842;
-    
+    private static double       mV;
+                                
     public static double getMotor( ) {
         double[] data = new double[def_sampler_size];
         for ( int i = 0; i < def_sampler_size; i++ ) {
             data[i] = ai.getAverageVoltage();
-            System.out.println("  -" + i + ":" + data[i]);
         }
         double modedata = mode(data);
-        System.out.println("Motor:" + modedata);
-        double motorOut = clamp(modedata < mid ? map(modedata, min, mid, -0.5, 0)
-                : ( modedata > mid ? map(modedata, max, mid, 0.5, 0) : 0 ), -0.5, 0.5);
+        mV = modedata;
+        double motorOut = clamp(.4107787451 * modedata - 1.008054874, -0.5, 0.5);
+        return motorOut;
+    }
+    
+    public static double getTurn( ) {
+        double[] data = new double[def_sampler_size];
+        for ( int i = 0; i < def_sampler_size; i++ ) {
+            data[i] = tegra.getAverageVoltage();
+        }
+        double modedata = mode(data);
+        double motorOut = modedata < mid ? map(modedata, min, mid, -100, 0)
+                : ( modedata > mid ? map(modedata, max, mid, 100, 0) : 0 );
         return motorOut;
     }
     

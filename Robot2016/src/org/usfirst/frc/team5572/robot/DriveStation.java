@@ -39,9 +39,15 @@ public class DriveStation {
         } catch ( Exception e ) {
             System.out.println("No Camera");
         }
-        SmartDashboard.putNumber("line_x0", 295);
-        SmartDashboard.putNumber("line_x1", 377);
-        SmartDashboard.putNumber("line0_y", 215);
+        SmartDashboard.putNumber("line0_x0", 278);
+        SmartDashboard.putNumber("line0_x1", 392);
+        SmartDashboard.putNumber("line1_x0", 295);
+        SmartDashboard.putNumber("line1_x1", 377);
+        SmartDashboard.putNumber("line2_x0", 295);
+        SmartDashboard.putNumber("line2_x1", 377);
+        SmartDashboard.putNumber("line3_x0", 295);
+        SmartDashboard.putNumber("line3_x1", 377);
+        SmartDashboard.putNumber("line0_y", 250);
         SmartDashboard.putNumber("line1_y", 30);
         SmartDashboard.putNumber("line2_y", 40);
         SmartDashboard.putNumber("line3_y", 280);
@@ -97,7 +103,6 @@ public class DriveStation {
             if ( use2Cam )
                 NIVision.IMAQdxStopAcquisition(session1);
             NIVision.IMAQdxStopAcquisition(session);
-            
         } catch ( Exception e ) {}
     }
     
@@ -106,20 +111,33 @@ public class DriveStation {
             NIVision.IMAQdxGrab(session, frame, 1);
             if ( use2Cam )
                 NIVision.IMAQdxGrab(session1, frame1, 1);
-            int x0 = ( int ) SmartDashboard.getNumber("line_x0");
-            int x1 = ( int ) SmartDashboard.getNumber("line_x1");
             NIVision.imaqDrawShapeOnImage(frame, frame,
-                    new Rect(( int ) SmartDashboard.getNumber("line0_y"), x0, 4, x1 - x0), DrawMode.PAINT_VALUE,
-                    ShapeMode.SHAPE_RECT, 0x0000ff);
+                    new Rect(( int ) SmartDashboard.getNumber("line0_y"), ( int ) SmartDashboard.getNumber("line0_x0"),
+                            4,
+                            ( int ) SmartDashboard.getNumber("line0_x1")
+                                    - ( int ) SmartDashboard.getNumber("line0_x0")),
+                    DrawMode.PAINT_VALUE, ShapeMode.SHAPE_RECT, 0x000ff);
             NIVision.imaqDrawShapeOnImage(frame, frame,
-                    new Rect(( int ) SmartDashboard.getNumber("line1_y"), x0, 4, x1 - x0), DrawMode.PAINT_VALUE,
+                    new Rect(( int ) SmartDashboard.getNumber("line1_y"), ( int ) SmartDashboard.getNumber("line1_x0"),
+                            4,
+                            ( int ) SmartDashboard.getNumber("line1_x1")
+                                    - ( int ) SmartDashboard.getNumber("line1_x0")),
+                    DrawMode.PAINT_VALUE, ShapeMode.SHAPE_RECT, 0x0ff00);
+            NIVision.imaqDrawShapeOnImage(frame, frame,
+                    new Rect(( int ) SmartDashboard.getNumber("line2_y"), ( int ) SmartDashboard.getNumber("line2_x0"),
+                            4,
+                            ( int ) SmartDashboard.getNumber("line2_x1")
+                                    - ( int ) SmartDashboard.getNumber("line2_x0")),
+                    DrawMode.PAINT_VALUE, ShapeMode.SHAPE_RECT, 0xff0000);
+            NIVision.imaqDrawShapeOnImage(frame, frame,
+                    new Rect(( int ) SmartDashboard.getNumber("line3_y"), ( int ) SmartDashboard.getNumber("line3_x0"),
+                            4,
+                            ( int ) SmartDashboard.getNumber("line3_x1")
+                                    - ( int ) SmartDashboard.getNumber("line3_x0")),
+                    DrawMode.PAINT_VALUE, ShapeMode.SHAPE_RECT, 0xffff00);
+            NIVision.imaqDrawShapeOnImage(frame, frame,
+                    new Rect(200, NIVision.imaqGetImageSize(frame).width / 2 - 2, 40, 4), DrawMode.PAINT_VALUE,
                     ShapeMode.SHAPE_RECT, 0x00ff00);
-            NIVision.imaqDrawShapeOnImage(frame, frame,
-                    new Rect(( int ) SmartDashboard.getNumber("line2_y"), x0, 4, x1 - x0), DrawMode.PAINT_VALUE,
-                    ShapeMode.SHAPE_RECT, 0xff0000);
-            NIVision.imaqDrawShapeOnImage(frame, frame,
-                    new Rect(( int ) SmartDashboard.getNumber("line3_y"), x0, 4, x1 - x0), DrawMode.PAINT_VALUE,
-                    ShapeMode.SHAPE_RECT, 0xffff00);
             CameraServer.getInstance().setImage(frame);
             if ( a_getKey(10) ) {
                 CameraServer.getInstance().setQuality(CameraServer.getInstance().getQuality() - 1);
@@ -127,7 +145,6 @@ public class DriveStation {
             if ( a_getKey(11) ) {
                 CameraServer.getInstance().setQuality(CameraServer.getInstance().getQuality() + 1);
             }
-            
         } catch ( Exception e ) {}
         SmartDashboard.putNumber("Camera Quality", CameraServer.getInstance().getQuality());
     }

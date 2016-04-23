@@ -5,14 +5,10 @@ import org.usfirst.frc.team5572.util.TimerSystem;
 
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
 public class Robot extends SampleRobot {
-    SendableChooser sc = new SendableChooser();
-    SendableChooser tsc = new SendableChooser();
     
     @Override
     protected void robotInit( ) {
@@ -21,11 +17,6 @@ public class Robot extends SampleRobot {
         Arduino.init();
         DriveTrain.init();
         Launcher.init();
-        sc.addDefault("false", 0);
-        sc.addObject("true", 1);
-        sc.addObject("ttrue", 2);
-        SmartDashboard.putData("run", sc);
-        SmartDashboard.putNumber("angle_set", 0.0);
     }
     
     @Override
@@ -41,8 +32,22 @@ public class Robot extends SampleRobot {
         }
         DriveStation.endCamera();
     }
+    
     @Override
-    public void test(){
-        
+    public void autonomous( ) {
+        while(!Launcher.setAngle(43.5));
+        while(!Launcher.fire());
+        Snoopr.zero();
+        DriveTrain.drivelr(-.4, -0.24);
+        Timer.delay(0.5);
+        DriveTrain.driveStraightReset();
+        while(!DriveTrain.driveStraight(0.34, 2, 20)) DriveTrain.feedData();
+        System.out.println("exit");
+        DriveTrain.driveStraightReset();
+        while(!DriveTrain.driveStraight(0.34, 2, 20)) DriveTrain.feedData();
+        while(!DriveTrain.setGlobalAngle(90, 0.5, 0.26));
+        DriveTrain.driveStraightReset();
+        while(!DriveTrain.driveStraight(0.34, 2, 20)) DriveTrain.feedData();
+        DriveTrain.drivelr(0, 0);
     }
 }
