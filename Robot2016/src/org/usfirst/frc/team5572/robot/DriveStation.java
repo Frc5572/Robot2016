@@ -39,18 +39,18 @@ public class DriveStation {
         } catch ( Exception e ) {
             System.out.println("No Camera");
         }
-        SmartDashboard.putNumber("line0_x0", 278);
-        SmartDashboard.putNumber("line0_x1", 392);
-        SmartDashboard.putNumber("line1_x0", 295);
-        SmartDashboard.putNumber("line1_x1", 377);
-        SmartDashboard.putNumber("line2_x0", 295);
-        SmartDashboard.putNumber("line2_x1", 377);
-        SmartDashboard.putNumber("line3_x0", 295);
-        SmartDashboard.putNumber("line3_x1", 377);
-        SmartDashboard.putNumber("line0_y", 250);
-        SmartDashboard.putNumber("line1_y", 30);
-        SmartDashboard.putNumber("line2_y", 40);
-        SmartDashboard.putNumber("line3_y", 280);
+        SmartDashboard.putNumber("line0_x0", /*278*/ 0);
+        SmartDashboard.putNumber("line0_x1", /*392*/ 0);
+        SmartDashboard.putNumber("line1_x0", /*295*/ 0);
+        SmartDashboard.putNumber("line1_x1", /*377*/ 0);
+        SmartDashboard.putNumber("line2_x0", /*295*/ 0);
+        SmartDashboard.putNumber("line2_x1", /*377*/ 0);
+        SmartDashboard.putNumber("line3_x0", /*295*/ 0);
+        SmartDashboard.putNumber("line3_x1", /*377*/ 0);
+        SmartDashboard.putNumber("line0_y", /*250*/ 0);
+        SmartDashboard.putNumber("line1_y", /*30*/ 0);
+        SmartDashboard.putNumber("line2_y", /*40*/ 0);
+        SmartDashboard.putNumber("line3_y", /*280*/ 0);
     }
     
     public static boolean a_getKey( int m ) {
@@ -136,7 +136,7 @@ public class DriveStation {
                                     - ( int ) SmartDashboard.getNumber("line3_x0")),
                     DrawMode.PAINT_VALUE, ShapeMode.SHAPE_RECT, 0xffff00);
             NIVision.imaqDrawShapeOnImage(frame, frame,
-                    new Rect(200, NIVision.imaqGetImageSize(frame).width / 2 - 2, 40, 4), DrawMode.PAINT_VALUE,
+                    new Rect((int)((NIVision.imaqGetImageSize(frame).height)*0.05), NIVision.imaqGetImageSize(frame).width / 2 - 17, (int)((NIVision.imaqGetImageSize(frame).height)*0.9), 4), DrawMode.PAINT_VALUE,
                     ShapeMode.SHAPE_RECT, 0x00ff00);
             CameraServer.getInstance().setImage(frame);
             if ( a_getKey(10) ) {

@@ -37,7 +37,7 @@ public class Launcher {
     public static void update( ) {
         if ( !m )
             if ( ! ( DriveStation.b_y() < 0 && Arduino.getAngle() < -20 )
-                    && ! ( DriveStation.b_y() > 0 && Arduino.getAngle() > 60 ) )
+                    && ! ( DriveStation.b_y() > 0 && Arduino.getAngle() > 71 ) )
                 linAct.set(-DriveStation.b_getThrottle() * 0.5 * DriveStation.b_y());
         if ( DriveStation.b_getKey(-1) )
             TimerSystem.execute(launch);
@@ -132,4 +132,8 @@ public class Launcher {
             return false;
         }
     };
+
+    public static boolean tegra( ) {
+        return Arduino.useTegra(linAct, 0.4, 0.7);
+    }
 }

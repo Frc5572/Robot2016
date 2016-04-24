@@ -36,9 +36,11 @@ public class DriveTrain {
     }
     
     public static void feedData( ) {
-        SmartDashboard.putNumber("Left Encoders", Snoopr.getLeftEncoderRaw());
-        SmartDashboard.putNumber("Right Encoders", Snoopr.getRightEncoderRaw());
-        SmartDashboard.putNumber("Yaw", Snoopr.getTotalYaw());
+        if(Conf.debug_smartDash){
+            SmartDashboard.putNumber("Left Encoders", Snoopr.getLeftEncoderRaw());
+            SmartDashboard.putNumber("Right Encoders", Snoopr.getRightEncoderRaw());
+            SmartDashboard.putNumber("Yaw", Snoopr.getTotalYaw());
+        }
     }
     
     private static void drive( ) {

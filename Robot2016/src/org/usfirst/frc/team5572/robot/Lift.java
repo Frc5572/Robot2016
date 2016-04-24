@@ -19,6 +19,7 @@ public class Lift {
         sc = new CANTalon(can_wheel_lift);
         ((CANTalon) sc).enableBrakeMode(true);
         platform.set(Value.kForward);
+        
     }
     
     private static boolean cancelPressed = false;

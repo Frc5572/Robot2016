@@ -66,13 +66,15 @@ public class Arduino {
     }
     
     public static boolean angle( SpeedController sc, double angle, double max ) {
-        start();
         setAngle(angle);
+        start();
         if ( isInPlace() ) {
+            sc.set(0);
             end();
             return true;
         }
-        double d = getMotor();
+        double d = -getMotor();
+        System.out.println(d + " | " + mV + " | " + getAngle());
         double abs = d > 0 ? d : -d;
         double sig = d > 0 ? 1 : -1;
         sc.set(sig * ( abs > max ? max : abs ));
@@ -131,14 +133,16 @@ public class Arduino {
     
     public static void snoop( ) {
         SmartDashboard.putNumber("angle", getAngle());
-        SmartDashboard.putNumber("angleV", anglev);
-        SmartDashboard.putNumber("motor", getMotor());
-        SmartDashboard.putBoolean("running", isRunning());
-        SmartDashboard.putNumber("tegra", getTegra());
-        SmartDashboard.putBoolean("found", isInPlace());
-        SmartDashboard.putBoolean("tegraRunning", isRunningTegra());
-        SmartDashboard.putNumber("distance", getDistance());
-        SmartDashboard.putBoolean("can shoot", isTargetThere());
+        if(Conf.debug_smartDash){
+            SmartDashboard.putNumber("angleV", anglev);
+            SmartDashboard.putNumber("motor", getMotor());
+            SmartDashboard.putBoolean("running", isRunning());
+            SmartDashboard.putNumber("tegra", getTegra());
+            SmartDashboard.putBoolean("found", isInPlace());
+            SmartDashboard.putBoolean("tegraRunning", isRunningTegra());
+            SmartDashboard.putNumber("distance", getDistance());
+            SmartDashboard.putBoolean("can shoot", isTargetThere());
+        }
     }
     
     private static final double mid = 2.484130620956421;

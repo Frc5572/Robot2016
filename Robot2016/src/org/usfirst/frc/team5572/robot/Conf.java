@@ -2,6 +2,7 @@
 package org.usfirst.frc.team5572.robot;
 
 public class Conf {
+    public static final boolean debug_smartDash = false;
     public static final short  an_angle_in          = 2;
     public static final short  an_tegra_in          = 1;
     public static final short  an_dist_in           = 0;
