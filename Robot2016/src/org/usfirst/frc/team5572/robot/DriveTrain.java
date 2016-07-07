@@ -18,6 +18,10 @@ public class DriveTrain {
     private static SpeedController[] left      = new SpeedController[leftCIMs.length];
     private static SpeedController[] right     = new SpeedController[rightCIMs.length];
                                                
+    /**
+     * Initialization method for drive train components. Must be called before
+     * any other method in DriveTrain
+     */
     public static void init( ) {
         for ( int i = 0; i < leftCIMs.length; i++ ) {
             left[i] = new VictorSP(leftCIMs[i]);
@@ -27,22 +31,31 @@ public class DriveTrain {
         }
     }
     
+    /**
+     * Lock is checked every tick. If it is false, the teleop method will not
+     * check for client input
+     */
     public static boolean lock = false;
     
+    /**
+     * Tick method
+     */
     public static void teleop( ) {
         if ( !lock )
             drive();
         feedData();
     }
     
+    /** Send info to client Smart Dashboard */
     public static void feedData( ) {
-        if(Conf.debug_smartDash){
+        if ( Conf.debug_smartDash ) {
             SmartDashboard.putNumber("Left Encoders", Snoopr.getLeftEncoderRaw());
             SmartDashboard.putNumber("Right Encoders", Snoopr.getRightEncoderRaw());
             SmartDashboard.putNumber("Yaw", Snoopr.getTotalYaw());
         }
     }
     
+    /** Input handling */
     private static void drive( ) {
         double k = DriveStation.a_getThrottle();
         double y = k * DriveStation.a_y();
@@ -60,6 +73,7 @@ public class DriveTrain {
         drivelr(l, r);
     }
     
+    /** Single tick drive using left and right values */
     public static void drivelr( double l, double r ) {
         for ( int i = 0; i < left.length; i++ ) {
             left[i].set(-l);
@@ -69,6 +83,7 @@ public class DriveTrain {
         }
     }
     
+    /** Single tick drive using forward and curve values */
     public static void drive( double o, double c ) {
         double x = o;
         double y = c;
@@ -93,10 +108,12 @@ public class DriveTrain {
         drivelr(l, r);
     }
     
+    /** Reset driveStraight private variables */
     public static void driveStraightReset( ) {
         Snoopr.resetEncoders();
     }
     
+    /** Utility method for driving straight (who would have thought?) */
     public static boolean driveStraight( double speed, double thresh, double dist_in ) {
         double dist = dist_in * 11.0107526882/* * .965517 */;
         if ( Snoopr.getRightEncoderRaw() <= dist - thresh ) {
@@ -109,12 +126,17 @@ public class DriveTrain {
         return true;
     }
     
+    /** Set the global angle to 0 */
     public static void resetGlobalAngle( ) {
         Snoopr.zero();
     }
     
-    private static int accum = 0;
+    private static int accum = 0; // accumulation value. This exists to
+                                  // guarantee that the robot is in a desired
+                                  // position by verifying it is in the correct
+                                  // position for an extended amount of time.
     
+    /** Utility method to set the global angle to be inside a certain range */
     public static boolean setGlobalAngle( double angle, double thresh, double min_power ) {
         double curr = Snoopr.getTotalYaw();
         while ( curr > 180 )
@@ -135,6 +157,7 @@ public class DriveTrain {
         return false;
     }
     
+    /** Single tick turn */
     public static double turn( double angle ) {
         while ( angle > 180 )
             angle -= 360;

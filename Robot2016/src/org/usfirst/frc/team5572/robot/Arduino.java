@@ -26,6 +26,7 @@ public class Arduino {
     private static AnalogInput     tegra;
     private static AnalogInput     distance;
                                    
+    /**Initialize arduino components*/
     public static void init( ) {
         ai = new AnalogInput(an_power_in);
         angle = new AnalogInput(an_angle_in);
@@ -39,32 +40,39 @@ public class Arduino {
         AnalogInput.setGlobalSampleRate(31250);
     }
     
+    /**Set output to arduino*/
     public static void setAngle( double angle ) {
         ao.set(map(angle, def_angle_min_out, def_angle_max_out, -1, 1));
     }
     
+    /**Note that arduino should be sending*/
     public static void startTegra( ) {
         tegraRun.set(true);
         tegraRunning = true;
     }
-    
+
+    /**Note that arduino should not be sending*/
     public static void endTegra( ) {
         tegraRun.set(false);
         tegraRunning = false;
     }
     
+    /**Returns if the arduino should be sending*/
     public static boolean isRunningTegra( ) {
         return tegraRunning;
     }
     
+    /**Get motor output for linear actuator*/
     public static double getTegra( ) {
         return tegra.getVoltage();
     }
     
+    /**Get the distance to the U*/
     public static double getDistance( ) {
         return distance.getVoltage();
     }
     
+    /**Arduino manual input angle utility method*/
     public static boolean angle( SpeedController sc, double angle, double max ) {
         setAngle(angle);
         start();
@@ -81,6 +89,7 @@ public class Arduino {
         return false;
     }
     
+    /**Arduino auto-targetting angle utility method*/
     public static boolean useTegra( SpeedController cannon, double turnMax, double max ) {
         System.out.println("useTegra");
         if ( !isTargetThere() ) {
@@ -101,26 +110,31 @@ public class Arduino {
         return false;
     }
     
+    /**Returns if tegra can see the U*/
     public static boolean isTargetThere( ) {
         return target.get();
     }
     
+    /**Start manual input*/
     public static void start( ) {
         run.set(true);
         running = true;
     }
     
+    /**End manual input*/
     public static void end( ) {
         run.set(false);
         running = false;
     }
     
+    /**Is in manual input*/
     public static boolean isRunning( ) {
         return running;
     }
     
     private static double anglev = 0;
     
+    /**Get current angle*/
     public static double getAngle( ) {
         double[] dataAngle = new double[def_sampler_size];
         for ( int i = 0; i < def_sampler_size; i++ ) {
@@ -131,6 +145,7 @@ public class Arduino {
         return angle;
     }
     
+    /**Send data to client*/
     public static void snoop( ) {
         SmartDashboard.putNumber("angle", getAngle());
         SmartDashboard.putBoolean("can shoot", isTargetThere());
@@ -144,12 +159,9 @@ public class Arduino {
             SmartDashboard.putNumber("distance", getDistance());
         }
     }
-    
-    private static final double mid = 2.484130620956421;
-    private static final double min = 0.004882812034338713;
-    private static final double max = 4.873046398162842;
     private static double       mV;
                                 
+    /**Get averaged motor output*/
     public static double getMotor( ) {
         double[] data = new double[def_sampler_size];
         for ( int i = 0; i < def_sampler_size; i++ ) {
@@ -161,17 +173,7 @@ public class Arduino {
         return motorOut;
     }
     
-    public static double getTurn( ) {
-        double[] data = new double[def_sampler_size];
-        for ( int i = 0; i < def_sampler_size; i++ ) {
-            data[i] = tegra.getAverageVoltage();
-        }
-        double modedata = mode(data);
-        double motorOut = modedata < mid ? map(modedata, min, mid, -100, 0)
-                : ( modedata > mid ? map(modedata, max, mid, 100, 0) : 0 );
-        return motorOut;
-    }
-    
+    /**Is arduino finished targetting*/
     public static boolean isInPlace( ) {
         return found.get();
     }

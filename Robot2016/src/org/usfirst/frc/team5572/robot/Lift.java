@@ -10,20 +10,35 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 
 
+/** Handler of */
 public class Lift {
-    private static DoubleSolenoid  platform;
-    private static SpeedController sc;
+    private static DoubleSolenoid  platform; // Solenoid for primer (piston that
+                                             // pushes out the lift)
+    private static SpeedController sc;       // Motor for lift
                                    
+    /**
+     * Initialization method for lift components. Must be called before any
+     * other method in Lift
+     */
     public static void init( ) {
         platform = new DoubleSolenoid(12, sol_lift_primer_f, sol_lift_primer_r);
         sc = new CANTalon(can_wheel_lift);
-        ((CANTalon) sc).enableBrakeMode(true);
+        ( ( CANTalon ) sc ).enableBrakeMode(true); // This causes the motor to
+                                                   // apply force to reach the
+                                                   // desired speed, rather than
+                                                   // accelerating at the
+                                                   // desired speed.
         platform.set(Value.kForward);
-        
     }
     
-    private static boolean cancelPressed = false;
+    private static boolean cancelPressed = false; // Tap boolean
     
+    /**
+     * Update inputs and outputs of the lift system.
+     * 
+     * @param test
+     *            whether or not to check sensors (false to check, true to not)
+     */
     public static void update( boolean test ) {
         if ( DriveStation.a_getKey(bind_drv_lift_prime) && !cancelPressed ) {
             platform.set(platform.get() == Value.kForward ? Value.kReverse : Value.kForward);
@@ -31,9 +46,10 @@ public class Lift {
         } else if ( !DriveStation.a_getKey(bind_drv_lift_prime) ) {
             cancelPressed = false;
         }
-        if ( DriveStation.a_getKey(bind_drv_lift_dn) && (Snoopr.getDio()[3] || test)) {
+        if ( DriveStation.a_getKey(bind_drv_lift_dn) && ( Snoopr.getDio()[3] || test ) ) {
             sc.set(-.8);
-        } else if ( ( DriveStation.a_getKey(bind_drv_lift_up) && Snoopr.getDio()[4] ) && (Snoopr.getDio()[3] || test) ) {
+        } else if ( ( DriveStation.a_getKey(bind_drv_lift_up) && Snoopr.getDio()[4] )
+                && ( Snoopr.getDio()[3] || test ) ) {
             sc.set(.8);
         } else {
             sc.set(0);

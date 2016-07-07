@@ -23,6 +23,7 @@ public class DriveStation {
     private static Joystick  stick0;
     private static Joystick  stick1;
                                        
+    /**Initialize input*/
     public static void init( ) {
         stick0 = new Joystick(joystick0);
         stick1 = new Joystick(joystick1);
@@ -49,42 +50,51 @@ public class DriveStation {
         }
     }
     
+    /**Get key from controller {@value #joystick0}*/
     public static boolean a_getKey( int m ) {
         if ( m == -1 )
             return stick0.getTrigger();
         return stick0.getRawButton(m);
     }
-    
+
+    /**Get key from controller {@value #joystick1}*/
     public static boolean b_getKey( int m ) {
         if ( m == -1 )
             return stick1.getTrigger();
         return stick1.getRawButton(m);
     }
-    
+
+    /**Get axis x from controller {@value #joystick0}*/
     public static double a_x( ) {
         return stick0.getX();
     }
-    
+
+    /**Get axis x from controller {@value #joystick1}*/
     public static double b_x( ) {
         return stick1.getX();
     }
-    
+
+    /**Get axis y from controller {@value #joystick0}*/
     public static double a_y( ) {
         return stick0.getY();
     }
-    
+
+    /**Get axis y from controller {@value #joystick1}*/
     public static double b_y( ) {
         return stick1.getY();
     }
-    
+
+    /**Get throttle from controller {@value #joystick0}*/
     public static double a_getThrottle( ) {
         return ( -stick0.getZ() + 1 ) / 2;
     }
-    
+
+    /**Get throttle from controller {@value #joystick1} (marked as the z-axis)*/
     public static double b_getThrottle( ) {
         return ( -stick1.getThrottle() + 1 ) / 2;
     }
     
+    /**Establish camera-client connection*/
     public static void beginCamera( ) {
         try {
             NIVision.IMAQdxStartAcquisition(session);
@@ -92,12 +102,14 @@ public class DriveStation {
         } catch ( Exception e ) {}
     }
     
+    /**End camera-client connection*/
     public static void endCamera( ) {
         try {
             NIVision.IMAQdxStopAcquisition(session);
         } catch ( Exception e ) {}
     }
     
+    /**Update camera-client connection*/
     public static void updateCamera( ) {
         try {
             NIVision.IMAQdxGrab(session, frame, 1);

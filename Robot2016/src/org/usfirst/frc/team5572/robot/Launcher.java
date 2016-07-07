@@ -14,14 +14,17 @@ import edu.wpi.first.wpilibj.VictorSP;
 
 
 public class Launcher {
-    public static SpeedController linAct;
-    private static Roller         primer0, primer1, roller;
-    public static boolean         m = false;
+    public static SpeedController linAct; // Linear actuator
+    private static Roller         primer0, primer1, roller; // Top wheel, Bottom wheel, flywheels
+    public static boolean         m = false; // 
                                     
+    /**Arduino set angle utility method for the linear actuator*/
     public static boolean setAngle( double angle ) {
         return Arduino.angle(linAct, angle, 0.4);
     }
     
+    /**Initialization method for launcher components. Must be called before any
+     * other method in Launcher*/
     public static void init( ) {
         linAct = new CANTalon(7);
         roller = new Roller(new CANTalon(can_wheel_intake), 1, -1, 0);
@@ -35,8 +38,9 @@ public class Launcher {
     private static boolean auto      = false;
     private static boolean autoalign = false;
                                      
+    /**Update inputs and outputs of the launcher system.*/
     public static void update( ) {
-        if ( !m )
+        if ( !m ) // 
             if ( ! ( DriveStation.b_y() < 0 && Arduino.getAngle() < -18 )
                     && ! ( DriveStation.b_y() > 0 && Arduino.getAngle() > 68 ) )
                 linAct.set(-DriveStation.b_getThrottle() * 0.5 * DriveStation.b_y());
@@ -71,13 +75,6 @@ public class Launcher {
             Arduino.endTegra();
             m = false;
         }
-        // boolean con;
-// if ( DriveStation.b_getKey(5) ) {
-// con=Arduino.useTegra(linAct, 0.4, 0.7);
-// }
-// if(con){
-// Arduino.endTegra();
-// }
         if ( DriveStation.b_getKey(11) ) {
             System.out.println(Arduino.angle(linAct, 43.37, .7));
         } else {
@@ -85,9 +82,12 @@ public class Launcher {
         }
     }
     
+    /**{@link #launch launch} is in the process of firing*/
     private static boolean isFiring       = false;
+    /**{@link #launch launch} has finished firing*/
     private static boolean finishedFiring = false;
                                           
+    /**Firing sequence utility method for the primer and roller*/
     public static boolean fire( ) {
         if ( finishedFiring ) {
             finishedFiring = false;
@@ -100,24 +100,25 @@ public class Launcher {
         return false;
     }
     
+    /**Reset firing sequence utility method private variables*/
     public static void resetAuto( ) {
         isFiring = false;
         finishedFiring = false;
     }
     
-    private static Time launch      = new Time() {
+    private static Time launch      = new Time() { // Timed sequence for launching the ball
                                         @Override
                                         public boolean run( long time ) {
-                                            if ( time > 1e9 || DriveStation.b_getKey(6) ) {
+                                            if ( time > 1e9 || DriveStation.b_getKey(6) ) { // After 1 second
                                                 primer0.zero();
                                                 primer1.zero();
                                                 roller.zero();
                                                 auto = false;
                                                 return true;
-                                            } else if ( time > .7e9 ) {
+                                            } else if ( time > .7e9 ) { // If not after 1 second, after 0.7 seconds
                                                 primer0.forward();
                                                 primer1.forward();
-                                            } else {
+                                            } else { // If not after 0.7 seconds
                                                 primer0.zero();
                                                 primer1.zero();
                                             }
@@ -126,12 +127,12 @@ public class Launcher {
                                             return false;
                                         }
                                     };
-    private static Time auto_launch = new Time() {
+    private static Time auto_launch = new Time() { // Timed sequence for launching the ball during autonomous
                                         @Override
                                         public boolean run( long time ) {
                                             finishedFiring = false;
                                             isFiring = true;
-                                            if ( time > 1e9 || DriveStation.b_getKey(6) ) {
+                                            if ( time > 1e9 ) {
                                                 primer0.zero();
                                                 primer1.zero();
                                                 roller.zero();
@@ -151,8 +152,4 @@ public class Launcher {
                                             return false;
                                         }
                                     };
-                                    
-    public static boolean tegra( ) {
-        return Arduino.useTegra(linAct, 0.4, 0.7);
-    }
 }
