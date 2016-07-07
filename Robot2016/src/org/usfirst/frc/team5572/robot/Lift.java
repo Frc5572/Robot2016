@@ -31,10 +31,10 @@ public class Lift {
         } else if ( !DriveStation.a_getKey(bind_drv_lift_prime) ) {
             cancelPressed = false;
         }
-        if ( DriveStation.a_getKey(bind_drv_lift_dn) ) {
+        if ( DriveStation.a_getKey(bind_drv_lift_dn) && (Snoopr.getDio()[3] || test)) {
             sc.set(-.8);
-        } else if ( ( DriveStation.a_getKey(bind_drv_lift_up) && Snoopr.getDio()[4] ) ) {
-            sc.set(0.8);
+        } else if ( ( DriveStation.a_getKey(bind_drv_lift_up) && Snoopr.getDio()[4] ) && (Snoopr.getDio()[3] || test) ) {
+            sc.set(.8);
         } else {
             sc.set(0);
         }

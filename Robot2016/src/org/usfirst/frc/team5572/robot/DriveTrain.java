@@ -102,7 +102,7 @@ public class DriveTrain {
         if ( Snoopr.getRightEncoderRaw() <= dist - thresh ) {
             double delta = Snoopr.getRightEncoderRaw() - Snoopr.getLeftEncoderRaw();
             double modDelta = delta / 100d;
-            double speed2 = clamp(0.002 * ( dist - Snoopr.getRightEncoderRaw() ), .2, speed);
+            double speed2 = clamp(0.001 * ( dist - Snoopr.getRightEncoderRaw() ), .2, speed);
             DriveTrain.drivelr(-speed2, -speed2 + modDelta);
             return false;
         }

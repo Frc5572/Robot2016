@@ -1,17 +1,17 @@
 
 package org.usfirst.frc.team5572.hubcity;
 
-import static org.usfirst.frc.team5572.hubcity.Configuration.*;
-
-import org.usfirst.frc.team5572.hubcity.DriveStation;
-import org.usfirst.frc.team5572.hubcity.Snoopr;
+import static org.usfirst.frc.team5572.hubcity.Configuration.bind_drv_lift_dn;
+import static org.usfirst.frc.team5572.hubcity.Configuration.bind_drv_lift_prime;
+import static org.usfirst.frc.team5572.hubcity.Configuration.bind_drv_lift_up;
+import static org.usfirst.frc.team5572.hubcity.Configuration.can_wheel_lift;
+import static org.usfirst.frc.team5572.hubcity.Configuration.sol_lift_primer_f;
+import static org.usfirst.frc.team5572.hubcity.Configuration.sol_lift_primer_r;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.SpeedController;
 
 
 

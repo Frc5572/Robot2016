@@ -133,6 +133,7 @@ public class Arduino {
     
     public static void snoop( ) {
         SmartDashboard.putNumber("angle", getAngle());
+        SmartDashboard.putBoolean("can shoot", isTargetThere());
         if(Conf.debug_smartDash){
             SmartDashboard.putNumber("angleV", anglev);
             SmartDashboard.putNumber("motor", getMotor());
@@ -141,7 +142,6 @@ public class Arduino {
             SmartDashboard.putBoolean("found", isInPlace());
             SmartDashboard.putBoolean("tegraRunning", isRunningTegra());
             SmartDashboard.putNumber("distance", getDistance());
-            SmartDashboard.putBoolean("can shoot", isTargetThere());
         }
     }
     

@@ -1,10 +1,14 @@
 package org.usfirst.frc.team5572.hubcity;
 
-import static org.usfirst.frc.team5572.hubcity.Configuration.*;
+import static org.usfirst.frc.team5572.hubcity.Configuration.dio_enc_l_a;
+import static org.usfirst.frc.team5572.hubcity.Configuration.dio_enc_l_b;
+import static org.usfirst.frc.team5572.hubcity.Configuration.dio_enc_r_a;
+import static org.usfirst.frc.team5572.hubcity.Configuration.dio_enc_r_b;
+import static org.usfirst.frc.team5572.hubcity.Configuration.dio_lift_low;
+import static org.usfirst.frc.team5572.hubcity.Configuration.dio_lift_top;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
