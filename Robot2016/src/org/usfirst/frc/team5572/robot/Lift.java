@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 
 
-/** Handler of */
+/** Handler of Lift operations*/
 public class Lift {
     private static DoubleSolenoid  platform; // Solenoid for primer (piston that
                                              // pushes out the lift)
