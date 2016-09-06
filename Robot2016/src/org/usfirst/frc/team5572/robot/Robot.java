@@ -25,18 +25,23 @@ public class Robot extends SampleRobot {
         Snoopr.init(); // Initializes sensor handling
         Arduino.init(); // Initializes subprocessor handling
         DriveTrain.init(); // Initializes drivetrain actuators
-        Launcher.init(); // Initializes launching system actuators
+        // Launcher.init(); // Initializes launching system actuators
+        Intake_Outtake.init();
         Lift.init(); // Initializes lift system actuators
-        sc.addObject("Drive Straight", 0); // Creates option to simply drive
-                                           // straight during autonomous
-        sc.addObject("Spy Zone", 1); // Creates option to shoot from the spyzone
-                                     // during autonomous
-        sc.addDefault("Spy Zone & Reach", 2); // Creates option to shoot from
-                                              // the spyzone, then reach the
-                                              // defense during autonomous
-        sc.addObject("Test Driving", 3); // Creates option that performs "Spy
-                                         // Zone & Reach" without shooting
-                                         // during autonomous
+        // sc.addObject("Drive Straight", 0); // Creates option to simply drive
+        // straight during autonomous
+        /// sc.addObject("Spy Zone", 1); // Creates option to shoot from the
+        /// spyzone
+        // during autonomous
+        // sc.addDefault("Spy Zone & Reach", 2); // Creates option to shoot from
+        // the spyzone, then reach the
+        // defense during autonomous
+        // sc.addObject("Test Driving", 3); // Creates option that performs "Spy
+        // Zone & Reach" without shooting
+        // during autonomous
+        sc.addDefault("Reach", 93);
+        sc.addObject("Cross", 94);
+        sc.addObject("Do Nothing", -1);
         SmartDashboard.putData("Auto", sc); // Place the autonomous options on
                                             // the Smart Dashboard
     }
@@ -54,11 +59,13 @@ public class Robot extends SampleRobot {
                                                        // to make sure that
                                                        // teleop is still
                                                        // enabled.
-            Launcher.update(); // Run launcher event. This handles all launcher
-                               // components, including the shooting system, and
-                               // the arm movement system. This also handles
-                               // arduino communication events, such as
-                               // auto-targetting.
+            // Launcher.update(); // Run launcher event. This handles all
+            // launcher
+            // components, including the shooting system, and
+            // the arm movement system. This also handles
+            // arduino communication events, such as
+            // auto-targetting.
+            Intake_Outtake.update();
             DriveStation.updateCamera(); // Send current image from the camera
                                          // to the client
             DriveTrain.teleop(); // Run drivetrain event. This handles all
@@ -94,12 +101,32 @@ public class Robot extends SampleRobot {
      */
     @Override
     public void autonomous( ) {
+        if ( ( int ) sc.getSelected() < 0 )
+            return;
         DriveTrain.resetGlobalAngle(); // Sets stored offset for gyroscope to
                                        // the current angle so that the global
                                        // angle returns 0.
         DriveTrain.driveStraightReset(); // Sets stored offset for encoders to
                                          // the current values so that the
                                          // global distance traveled returns 0.
+        if ( ( int ) sc.getSelected() == 94 ) {
+            while ( !DriveTrain.driveStraight(0.4, 0.5, 120) && isAutonomous() && isEnabled() );
+            DriveTrain.drivelr(0, 0); // Stop
+        } else if ( ( int ) sc.getSelected() == 93 ) {
+            while ( !DriveTrain.driveStraight(0.4, 0.5, 42) && isAutonomous() && isEnabled() );
+            DriveTrain.drivelr(0, 0); // Stop
+        } else if ( ( int ) sc.getSelected() == 95 ) {
+            while ( !DriveTrain.driveStraight(0.4, 0.5, 100) && isAutonomous() && isEnabled() );
+            DriveTrain.drivelr(0, 0); // Stop
+            Timer.delay(3);
+            while ( !DriveTrain.driveStraight(0.4, 0.5, 34) && isAutonomous() && isEnabled() );
+            DriveTrain.drivelr(0, 0); // Stop
+            Intake_Outtake.outtake();
+            while(TimerSystem.times() > 0 && isAutonomous() && isEnabled()){
+                TimerSystem.update();
+            }
+            TimerSystem.clear();
+        }
         if ( ( int ) sc.getSelected() == 1 || ( int ) sc.getSelected() == 2 ) { // If
                                                                                 // the
                                                                                 // autonomous
@@ -108,30 +135,34 @@ public class Robot extends SampleRobot {
                                                                                 // supposed
                                                                                 // to
                                                                                 // shoot.
-            while ( !Arduino.useTegra(Launcher.linAct, 0.4, 0.7) && isAutonomous() && isEnabled() ); // Set
-                                                                                                     // the
-                                                                                                     // angle
-                                                                                                     // using
-                                                                                                     // the
-                                                                                                     // arduino
-            double angle = Arduino.getAngle() + 1;// Get new desired angle.
-                                                  // Arduino always overshoots
-                                                  // the angle. This is fine
-                                                  // when coming from below, but
-                                                  // since this is coming from
-                                                  // above in this case, it
-                                                  // comes
-                                                  // up about one degree to
-                                                  // compensate
-            while ( Arduino.getAngle() < angle && isAutonomous() && isEnabled() )
-                Launcher.linAct.set(-0.4);
-            Launcher.linAct.set(0);
-            while ( !Launcher.fire() && isAutonomous() && isEnabled() ); // Execute
-                                                                         // the
-                                                                         // firing
-                                                                         // sequence.
-            System.out.println("done"); // Debug "done" appears when shooting
-                                        // cycle has finished.
+            // while ( !Arduino.useTegra(Launcher.linAct, 0.4, 0.7) &&
+            // isAutonomous() && isEnabled() ); // Set
+            // the
+            // angle
+            // using
+            // the
+            // arduino
+            // double angle = Arduino.getAngle() + 1;// Get new desired angle.
+            // Arduino always overshoots
+            // the angle. This is fine
+            // when coming from below, but
+            // since this is coming from
+            // above in this case, it
+            // comes
+            // up about one degree to
+            // compensate
+            /* while ( Arduino.getAngle() < angle && isAutonomous() &&
+             * isEnabled() )
+             * Launcher.linAct.set(-0.4);
+             * Launcher.linAct.set(0);
+             * while ( !Launcher.fire() && isAutonomous() && isEnabled() ); //
+             * Execute
+             * // the
+             * // firing
+             * // sequence.
+             * System.out.println("done"); // Debug "done" appears when shooting */                          // cycle
+                                                                                                             // has
+                                                                                                             // finished.
         }
         if ( ( int ) sc.getSelected() == 2 || ( int ) sc.getSelected() == 3 ) { // If
                                                                                 // the
@@ -162,19 +193,8 @@ public class Robot extends SampleRobot {
             DriveTrain.drivelr(0, 0); // Stop
             DriveTrain.driveStraightReset(); // Reset encoders so that the
                                              // overall distance is reset to 0.
-            while ( !DriveTrain.driveStraight(0.4, 0.5, 24) && isAutonomous() && isEnabled() ); // Drive
+            while ( !DriveTrain.driveStraight(0.4, 0.5, 96) && isAutonomous() && isEnabled() ); // Drive
                                                                                                 // towards
-                                                                                                // the
-                                                                                                // defense.
-                                                                                                // TODO:
-                                                                                                // This
-                                                                                                // needs
-                                                                                                // to
-                                                                                                // be
-                                                                                                // modified
-                                                                                                // to
-                                                                                                // actually
-                                                                                                // reach
                                                                                                 // the
                                                                                                 // defense.
             DriveTrain.drivelr(0, 0); // Stop at the end of the movement period.

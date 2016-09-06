@@ -31,4 +31,12 @@ public class TimerSystem {
        times.removeAll(end);
     }
     
+    public static int times(){
+        return times.size();
+    }
+
+    public static void clear( ) {
+        times.clear();
+    }
+    
 }
