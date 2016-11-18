@@ -6,14 +6,13 @@ import static org.usfirst.frc.team5572.util.NumberUtils.*;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 
 public class DriveTrain {
-    private static final int[]       leftCIMs  = { pwm_wheel_bl, pwm_wheel_fl };        // PWM
+    private static final int[]       leftCIMs  = pwm_wheel_l;        // PWM
                                                                                         // Channels
-    private static final int[]       rightCIMs = { pwm_wheel_br, pwm_wheel_fr };        // PWM
+    private static final int[]       rightCIMs = pwm_wheel_r;        // PWM
                                                                                         // Channels
     private static SpeedController[] left      = new SpeedController[leftCIMs.length];
     private static SpeedController[] right     = new SpeedController[rightCIMs.length];
@@ -43,16 +42,6 @@ public class DriveTrain {
     public static void teleop( ) {
         if ( !lock )
             drive();
-        feedData();
-    }
-    
-    /** Send info to client Smart Dashboard */
-    public static void feedData( ) {
-        if ( Conf.debug_smartDash ) {
-            SmartDashboard.putNumber("Left Encoders", Snoopr.getLeftEncoderRaw());
-            SmartDashboard.putNumber("Right Encoders", Snoopr.getRightEncoderRaw());
-            SmartDashboard.putNumber("Yaw", Snoopr.getTotalYaw());
-        }
     }
     
     /** Input handling */
@@ -76,7 +65,7 @@ public class DriveTrain {
     /** Single tick drive using left and right values */
     public static void drivelr( double l, double r ) {
         for ( int i = 0; i < left.length; i++ ) {
-            left[i].set(-l);
+            left[i].set(l);
         }
         for ( int i = 0; i < right.length; i++ ) {
             right[i].set(r);
@@ -106,66 +95,5 @@ public class DriveTrain {
             r = y + x;
         }
         drivelr(l, r);
-    }
-    
-    /** Reset driveStraight private variables */
-    public static void driveStraightReset( ) {
-        Snoopr.resetEncoders();
-    }
-    
-    /** Utility method for driving straight (who would have thought?) */
-    public static boolean driveStraight( double speed, double thresh, double dist_in ) {
-        double dist = dist_in * 11.0107526882/* * .965517 */;
-        if ( Snoopr.getRightEncoderRaw() <= dist - thresh ) {
-            double delta = Snoopr.getRightEncoderRaw() - Snoopr.getLeftEncoderRaw();
-            double modDelta = delta / 100d;
-            double speed2 = clamp(0.001 * ( dist - Snoopr.getRightEncoderRaw() ), .2, speed);
-            DriveTrain.drivelr(-speed2, -speed2 + modDelta);
-            return false;
-        }
-        return true;
-    }
-    
-    /** Set the global angle to 0 */
-    public static void resetGlobalAngle( ) {
-        Snoopr.zero();
-    }
-    
-    private static int accum = 0; // accumulation value. This exists to
-                                  // guarantee that the robot is in a desired
-                                  // position by verifying it is in the correct
-                                  // position for an extended amount of time.
-    
-    /** Utility method to set the global angle to be inside a certain range */
-    public static boolean setGlobalAngle( double angle, double thresh, double min_power ) {
-        double curr = Snoopr.getTotalYaw();
-        while ( curr > 180 )
-            curr -= 360;
-        while ( curr < -180 )
-            curr += 360;
-        if ( Math.abs(angle - curr) <= thresh ) {
-            System.out.print(angle - curr + "  ");
-            accum++;
-            if ( accum > 300 )
-                return true;
-            turn(0);
-        } else {
-            accum = 0;
-            if ( Math.abs(turn(signum(angle - curr) * ( 90 * ( min_power - 0.05 ) ) + angle - curr)) < min_power )
-                return true;
-        }
-        return false;
-    }
-    
-    /** Single tick turn */
-    public static double turn( double angle ) {
-        while ( angle > 180 )
-            angle -= 360;
-        while ( angle < -180 )
-            angle += 360;
-        double val = clampMotor(angle / 180 + 0.05);
-        System.out.println(val);
-        drivelr(-val, val);
-        return val;
     }
 }

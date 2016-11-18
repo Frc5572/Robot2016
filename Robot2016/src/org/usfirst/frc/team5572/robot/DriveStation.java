@@ -113,13 +113,6 @@ public class DriveStation {
     public static void updateCamera( ) {
         try {
             NIVision.IMAQdxGrab(session, frame, 1);
-            NIVision.imaqTranspose(frame, frame);
-            NIVision.imaqFlip(frame, frame, FlipAxis.HORIZONTAL_AXIS);
-            NIVision.imaqDrawShapeOnImage(frame, frame,
-                    new Rect(( int ) ( ( NIVision.imaqGetImageSize(frame).height ) * 0.05 ),
-                            NIVision.imaqGetImageSize(frame).width / 2 - 25,
-                            ( int ) ( ( NIVision.imaqGetImageSize(frame).height ) * 0.9 ), 4),
-                    DrawMode.PAINT_VALUE, ShapeMode.SHAPE_RECT, 0x00ff00);
             CameraServer.getInstance().setImage(frame);
             if ( a_getKey(10) ) {
                 CameraServer.getInstance().setQuality(CameraServer.getInstance().getQuality() - 1);

@@ -28,8 +28,16 @@ public class Roller {
     }
     
     /** Sets to interpolated value (0 is backwards, 1 is forwards) */
-    public void interpolate( float val ) {
+    public void interpolate( double val ) {
         sc.set(f * val + b * ( 1 - val ));
+    }
+    
+    public void forward_interpolate(double val){
+        sc.set(f * val + z * (1-val));
+    }
+    
+    public void back_interpolate(double val){
+        sc.set(b * val + z * (1-val));
     }
     
     /** Sets to zero */
